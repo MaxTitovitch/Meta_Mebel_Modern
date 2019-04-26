@@ -1,0 +1,10 @@
+body {
+	background-color: black;
+	color: white;
+	text-align: center;
+	padding-top: 10vh;
+}
+
+.error-cat {
+	height: 60vh;
+}

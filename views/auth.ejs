@@ -1,0 +1,88 @@
+<%- include('header'); -%>
+<main>
+	<% if(!isRegistry){ %>
+
+		<form class="auth-form" method="post" action="/auth">
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">Почта:</label>
+		    <input name="login" type="email" class="form-control" placeholder="Логин" required="true">
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInputPassword1">Пароль:</label>
+		    <input name="password" type="password" class="form-control" placeholder="Пароль" required="true">
+		  </div>
+		  <button type="submit" class="btn btn-primary">Войти</button>
+		</form>
+
+	<% } else { %>
+
+		<form class="auth-form" method="post" action="/auth">
+		  <div class="form-group">
+		    <label for="login">Почта:</label>
+		    <input name="login" id="login" type="email" class="form-control" placeholder="Логин" required="true">
+		  </div>
+		  <div class="form-group">
+		    <label for="password">Пароль:</label>
+		    <input name="password" id="password" type="password" class="form-control" placeholder="Пароль" required="true">
+		  </div>
+		  <div class="form-group">
+		    <label for="confpassword">Подтвердите пароль:</label>
+		    <input name="confpassword" id="confpassword" type="password" class="form-control" placeholder="Пароль ещё раз" required="true">
+		  </div>
+		  <div class="form-group">
+		    <label for="fullName">ФИО:</label>
+		    <input name="fullName" id="fullName" type="text" class="form-control" placeholder="Логин" required="true">
+		  </div>
+		  <div class="form-group">
+		    <label for="date">Дата Рождения:</label>
+		    <input name="date" id="date" type="date" class="form-control" placeholder="Логин" required="true">
+		  </div>
+
+		  <fieldset class="form-group">
+		    <div class="row">
+		      <legend class="col-form-label col-sm-2 pt-0">Язык:</legend>
+		      <div class="col-sm-10">
+		        <div class="form-check">
+		          <input class="form-check-input" type="radio" name="language" id="gridRadios1" value="RU" checked>
+		          <label class="form-check-label" for="gridRadios1">
+		            Русский
+		          </label>
+		        </div>
+		        <div class="form-check">
+		          <input class="form-check-input" type="radio" name="language" id="gridRadios2" value="EN">
+		          <label class="form-check-label" for="gridRadios2">
+		            Английский
+		          </label>
+		        </div>
+		      </div>
+		    </div>
+		  </fieldset>
+
+		  <fieldset class="form-group">
+		    <div class="row">
+		      <legend class="col-form-label col-sm-2 pt-0">Тема:</legend>
+		      <div class="col-sm-10">
+		        <div class="form-check">
+		          <input class="form-check-input" type="radio" name="theme" id="gridRadios3" value="WHITE" checked>
+		          <label class="form-check-label" for="gridRadios3">
+		            Светлая
+		          </label>
+		        </div>
+		        <div class="form-check">
+		          <input class="form-check-input" type="radio" name="theme" id="gridRadios4" value="BLACK">
+		          <label class="form-check-label" for="gridRadios4">
+		            Темная
+		          </label>
+		        </div>
+		      </div>
+		    </div>
+		  </fieldset>
+
+		  <button type="submit" class="btn btn-primary form-control">Регистрация</button>
+		</form>
+
+	<% } %>
+	
+
+</main> 
+<%- include('footer'); -%>

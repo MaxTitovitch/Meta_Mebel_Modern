@@ -1,0 +1,112 @@
+body {
+	background-color: #f8f4ff;
+	color: text;
+}
+
+.logo {
+    height: 13vh;
+}
+
+.head-info {
+    float: left;
+}
+
+.phone-img {
+    width: 1vw;
+}
+
+.phones {
+    font-size: 1.5vw;
+}
+
+.time-job {
+    font-size: 3vw;    
+}
+
+.form-inline {
+    width: 100%;
+}
+
+.form-inline ul li{
+    margin: auto;
+    width: 100%;
+    border-left: 1px solid #cfd1cd;
+    border-right: 1px solid #cfd1cd;
+    text-align: center;
+}
+
+.form-inline ul .form-control {
+    width: 58%;
+}
+
+.form-inline ul button {
+    width: 40%;
+    /*width: auto;*/
+}
+
+.main-tags a {
+    font-size: 2vw;
+}
+
+.form-inline ul {
+    width: 100%;
+    border: 1px solid #cfd1cd;
+    border-radius: 5px;
+}
+
+footer {
+
+}
+
+.footer-info {
+    text-align: center;
+    border-top: 1px solid #cfd1cd;
+    width: 90%;
+    margin: 10px auto;
+    padding-top: 20px;
+    display: flex;
+}
+
+
+.footer-info p {
+    margin: auto;
+}
+
+.main {
+    margin: 20px;
+}
+
+.t-shirt {
+    width: 20vw;
+}
+
+.t-shirt-one {
+    /*display: -webkit-box;*/
+    /*width: 25%;*/
+    border: 1px solid #cfd1cd;
+    border-radius: 5px; 
+    float: left;   
+    margin: 10px;
+    text-align: center;
+}
+
+.main-new {
+    display: flow-root;
+}
+
+.text-area {
+    border-bottom: 1px solid #cfd1cd; 
+}
+
+main p {
+    font-size: 20px;
+}
+
+main {
+    margin: 20px;
+}
+
+.auth-form {
+    margin: auto;
+    width: 40%;
+}
