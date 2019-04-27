@@ -25,7 +25,7 @@
               </div>
             <% } else { %>
               <div class="auth-space">
-                  <a href="/mypage"><%= user.fullName %></a> | <a href="/logout">Выйти</a>
+                  <a href="/users/<%= user.id %>"><%= user.fullName %></a> | <a href="/logout">Выйти</a>
               </div>
             <% } %>
         </nav>

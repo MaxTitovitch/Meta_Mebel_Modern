@@ -51,7 +51,10 @@ app.use(passport.session());
 require('./auth');
 
 app.use(function(req, res, next){
-    if(req.session.passport.user == undefined) {
+    // console.log(req.session)
+    if(req.session.passport == undefined) {
+        next();
+    } else if(req.session.passport.user == undefined) {
         app.locals.user = null;
         next();
     } else {
@@ -111,9 +114,11 @@ var authFun = function (req, res, next) {
 
 var verifyFun = function (req, res, next) {
     mysql.getEntity('users', 'id=' + req.session.passport.user).then(users => {
-        if(users[0].verify == 0) {
+        if(users[0].verify == 0 && req.path != '/verify') {
             res.redirect('/verify');
-        } else if (req.path == '/verify'){
+        } else if (users[0].verify != 0 && req.path == '/verify'){
+            res.redirect('/');
+        } else if (!req.isAuthenticated() && req.path == '/verify'){
             res.redirect('/');
         }
         next();
@@ -154,7 +159,7 @@ app.get('/auth', urlencodedParser, authFun, function (req, res) {
 });
 
 app.post('/auth', urlencodedParser, function (req, res) {
-    return doAuth(req, res, '/mypage') 
+    return doAuth(req, res, '/users/' + req.session.passport.user) 
 });
 
 var createUser = function (body, token) {
@@ -179,12 +184,36 @@ app.post('/registry', urlencodedParser, function (req, res) {
         return doAuth(req, res, '/verify');
     }).catch(error => {
        res.render('error', {error: error, title: SYSTEM_ERROR_HEAD});
-    });});
-
-
-app.get('/mypage', urlencodedParser, authFun, verifyFun, function (req, res) {  
-    res.send('Hello User');
+    });
 });
+
+
+// app.get('/users/' + req.session.passport.user, urlencodedParser, authFun, verifyFun, function (req, res) {  
+//     res.redirect('/users/' + req.session.passport.user);
+// });
+
+
+app.get('/users/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
+    mysql.getEntity('users', 'id=' + req.params.index).then(users => {
+        mysql.getEntity('tshirts', 'userID=' + req.params.index).then(tshirts => {
+            if(users.length < 1){
+                res.redirect('/');
+            } else {
+                var user = users[0];
+                mysql.getEntity('users').then(allUsers => {
+                    res.render('userpanel', {user: user, tshirts: tshirts, allUsers: allUsers});
+                }).catch(error => { 
+                    res.redirect('/');
+                });
+            }
+        }).catch(error => { 
+            res.redirect('/');
+        });
+    }).catch(error => { 
+        res.redirect('/');
+    });
+});
+
 
 app.get('/logout', urlencodedParser, function (req, res) {
     req.logout();
@@ -224,8 +253,8 @@ app.get('/tokenverify/:tokenid', urlencodedParser, function (req, res) {
         mysql.updateEntity('users', user.id, user).then(result => {
             req.body.email = user.email;
             req.body.password = user.password;
-            // doAuth(req, res, '/mypage');
-            return doAuth(req, res, '/mypage');
+            // doAuth(req, res, '/users/' + req.session.passport.user);
+            return doAuth(req, res, '/users/' + req.session.passport.user);
         }).catch(error => {
             res.render('error', {error: error, title: SYSTEM_ERROR_HEAD});
         });
