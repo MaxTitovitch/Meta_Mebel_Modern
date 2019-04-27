@@ -1,5 +1,4 @@
 
-verifyMessage = 
 
 module.exports = {
 	verifyMessage: {

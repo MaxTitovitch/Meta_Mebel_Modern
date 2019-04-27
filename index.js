@@ -113,12 +113,11 @@ var authFun = function (req, res, next) {
 }
 
 var verifyFun = function (req, res, next) {
+    if(!req.isAuthenticated()) res.redirect('/');
     mysql.getEntity('users', 'id=' + req.session.passport.user).then(users => {
         if(users[0].verify == 0 && req.path != '/verify') {
             res.redirect('/verify');
         } else if (users[0].verify != 0 && req.path == '/verify'){
-            res.redirect('/');
-        } else if (!req.isAuthenticated() && req.path == '/verify'){
             res.redirect('/');
         }
         next();
@@ -227,7 +226,8 @@ app.get('/verify', urlencodedParser, verifyFun, function (req, res) {
 app.post('/verify', urlencodedParser, function (req, res) {
     if(req.body.button == "newquery") {
         mysql.getEntity('users', 'id=' + req.session.passport.user).then(users => {
-            doMail(user.email, messages.verifyMessage);
+            messages.verifyMessage.body = messages.verifyMessage.body.replace("TO_REPLACE", users[0].token);
+            doMail(users[0].email, messages.verifyMessage);
             res.render('verify');
         }).catch(error => {
             res.render('error', {error: error, title: SYSTEM_ERROR_HEAD});
@@ -253,7 +253,6 @@ app.get('/tokenverify/:tokenid', urlencodedParser, function (req, res) {
         mysql.updateEntity('users', user.id, user).then(result => {
             req.body.email = user.email;
             req.body.password = user.password;
-            // doAuth(req, res, '/users/' + req.session.passport.user);
             return doAuth(req, res, '/users/' + req.session.passport.user);
         }).catch(error => {
             res.render('error', {error: error, title: SYSTEM_ERROR_HEAD});
