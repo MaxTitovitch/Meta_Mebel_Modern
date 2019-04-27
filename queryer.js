@@ -6,7 +6,7 @@ const RANKING_FIELDS = ['value', 'userID', 'tshirtID'];
 const TSHIRT_FIELDS = ['name', 'image', 'html', 'shortText', 'price', 'ranking', 'userID'];
 const TSHIRTTAGS_FIELDS = ['tshirtID', 'tagName'];
 const USERMEDAL_FIELDS = ['userID', 'medalID'];
-const USER_FIELDS = ['login', 'password', 'role', 'fullName', 'dateOfBirth', 'avatar', 'language', 'theme'];
+const USER_FIELDS = ['email', 'password', 'role', 'fullName', 'dateOfBirth', 'language', 'theme', 'verify', 'token'];
 
 
 var pool  = mysql.createPool({
@@ -25,7 +25,7 @@ var getConnection = function(callback) {
 var createPromise = function (query) {
 	return new Promise((resolve, reject) => {
 		getConnection((err, connection) => {
-            console.log(query);
+            // console.log(query);
 			connection.query(query, function(err, rows) {
 				if (err) reject(err);
 				resolve(rows);
@@ -65,6 +65,7 @@ var createInsertQuery = function (table, entity) {
 }
 
 var updateEntity = function (table, id, entity) {
+    delete entity.id;
     return createPromise(createUpdateQuery(table, id, entity));
 }
 

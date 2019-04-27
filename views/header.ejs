@@ -19,9 +19,15 @@
                 <img src="/public/img/life.png" class="phone-img" /> +375 25 404-91-89  <br />
                 <img src="/public/img/velcom.png" class="phone-img" /> +375 29 505-91-89  <br />
             </div>
-            <div class="auth-space">
-                <a href="/auth">Вход</a> | <a href="/auth?reg=true">Регистрация</a>
-            </div>
+            <% if(user == null) { %>
+              <div class="auth-space">
+                  <a href="/auth">Вход</a> | <a href="/auth?reg=true">Регистрация</a>
+              </div>
+            <% } else { %>
+              <div class="auth-space">
+                  <a href="/mypage"><%= user.fullName %></a> | <a href="/logout">Выйти</a>
+              </div>
+            <% } %>
         </nav>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">

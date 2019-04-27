@@ -4,38 +4,34 @@
 
 		<form class="auth-form" method="post" action="/auth">
 		  <div class="form-group">
-		    <label for="exampleInputEmail1">Почта:</label>
-		    <input name="login" type="email" class="form-control" placeholder="Логин" required="true">
+		    <label for="email">Почта:</label>
+		    <input name="email" type="email" class="form-control" placeholder="Логин" required="true">
 		  </div>
 		  <div class="form-group">
-		    <label for="exampleInputPassword1">Пароль:</label>
+		    <label for="password">Пароль:</label>
 		    <input name="password" type="password" class="form-control" placeholder="Пароль" required="true">
 		  </div>
-		  <button type="submit" class="btn btn-primary">Войти</button>
+		  <button type="submit" class="btn btn-primary form-control">Войти</button>
 		</form>
 
 	<% } else { %>
 
-		<form class="auth-form" method="post" action="/auth">
+		<form class="auth-form" method="post" action="/registry">
 		  <div class="form-group">
-		    <label for="login">Почта:</label>
-		    <input name="login" id="login" type="email" class="form-control" placeholder="Логин" required="true">
+		    <label for="email">Почта:</label>
+		    <input name="email" id="email" type="email" class="form-control" placeholder="Почта" required="true">
 		  </div>
 		  <div class="form-group">
 		    <label for="password">Пароль:</label>
 		    <input name="password" id="password" type="password" class="form-control" placeholder="Пароль" required="true">
 		  </div>
 		  <div class="form-group">
-		    <label for="confpassword">Подтвердите пароль:</label>
-		    <input name="confpassword" id="confpassword" type="password" class="form-control" placeholder="Пароль ещё раз" required="true">
-		  </div>
-		  <div class="form-group">
 		    <label for="fullName">ФИО:</label>
-		    <input name="fullName" id="fullName" type="text" class="form-control" placeholder="Логин" required="true">
+		    <input name="fullName" id="fullName" type="text" class="form-control" placeholder="ФИО" required="true">
 		  </div>
 		  <div class="form-group">
 		    <label for="date">Дата Рождения:</label>
-		    <input name="date" id="date" type="date" class="form-control" placeholder="Логин" required="true">
+		    <input name="date" id="date" type="date" class="form-control" required="true" min="1920-01-01" max="2015-01-01">
 		  </div>
 
 		  <fieldset class="form-group">
