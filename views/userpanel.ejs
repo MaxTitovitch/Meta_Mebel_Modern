@@ -93,7 +93,7 @@
             </a>
         <% }); %>
     	</div>
-		  <button id="create-tshirt" class="form-control btn btn-primary" type="submit">Создать</button>
+		  <a id="create-tshirt" class="form-control btn btn-primary" href="/edit_tshirt/0<%= user.id == thisUser.id ? '' : '?for=admin' %>">Создать</a>
 		</div>
 
 		<% if (user.role == 1) { -%>

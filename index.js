@@ -4,6 +4,7 @@ const SERVER_PORT = 3000;
 const SELECT_USERMEDALS = 'SELECT * FROM medals JOIN usermedals ON medals.id=usermedals.medalD WHERE usermedals.userID=';
 const SELECT_USER_AND_TSHIRT = 'SELECT tshirts.*, users.fullName FROM tshirts JOIN users ON tshirts.userID=users.id WHERE tshirts.id=';
 const SELECT_COMMENTS = 'SELECT comments.*, users.fullName, COUNT(likes.id) as quantity FROM comments LEFT JOIN likes ON comments.id=likes.commentID JOIN users ON users.id=comments.userID WHERE comments.tshirtID=';
+const SELECT_BEST_TAGS = 'SELECT tagName FROM tshirttags GROUP BY tagName ORDER BY COUNT(*) DESC'
 
 var express = require('express');
 var app = express();
@@ -246,6 +247,28 @@ app.get('/tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, r
         }).catch(error => { 
             res.redirect('/');
         });
+});
+
+app.get('/edit_tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
+    mysql.getEntity('tshirttags', 'tshirtID=' + req.params.index ).then(thisTags =>  { 
+        mysql.getByQuery(SELECT_BEST_TAGS).then(tags =>  { 
+            mysql.getEntity('tshirts', 'id=' + req.params.index).then(tshirts =>  {
+                if(req.params.index == 0) {
+                    res.render('edittshirt', {user: app.locals.user, tshirt:  null, tags: tags, thisTags: thisTags});
+                } else if(tshirts.length > 0) {
+                    res.render('edittshirt', {user: app.locals.user, tshirt:  tshirts[0], tags: tags, thisTags: thisTags});
+                } else {
+                    res.redirect('/');
+                }
+            }).catch(error => { 
+                res.redirect('/');
+            });
+        }).catch(error => { 
+            res.redirect('/');
+        });
+    }).catch(error => { 
+        res.redirect('/');
+    });
 });
 
 

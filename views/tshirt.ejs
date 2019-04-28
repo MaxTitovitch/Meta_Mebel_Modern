@@ -1,12 +1,6 @@
 <%- include('header'); -%>
 <main>
-	<%= //console.log(user) %>
-	<%= //console.log(tshirt) %>
-	<%= //console.log(rankings ) %>
-	<%= //console.log(comments) %>
-	<%= //console.log(likes) %>
-	<%= //console.log(tags) %>
-	
+
 	<div class="container">
 		<h2><%= tshirt.name %></h2>
 		<div class="rating_block-static">
@@ -65,9 +59,9 @@
 		  <label for="rating_1" class="label_rating"></label>
 		</div>
 		<div class="buttons-tshirt">
-			<button id="copy-tshirt" class="btn btn-primary" type="submit">Копировать</button>
+			<a id="copy-tshirt" class="btn btn-primary" href="/edit_tshirt/0?from=<%= tshirt.id %>">Копировать</a>
 			<% if (user.role == 1 || user.id == tshirt.userID) { -%>
-				<button id="update-this-tshirt" class="btn btn-primary" type="submit">Редактировать</button>
+				<a id="update-this-tshirt" class="btn btn-primary" href="/edit_tshirt/<%= tshirt.id %>/<%= user.id == tshirt.userID ? '' : '?for=admin' %>">Редактировать</a>
 				<button id="delete-this-tshirt" class="btn btn-primary" type="submit">Удалить</button>
 			<% } -%>
 		</div>
