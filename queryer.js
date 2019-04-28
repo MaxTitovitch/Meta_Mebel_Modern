@@ -36,8 +36,12 @@ var createPromise = function (query) {
 }
 
 
+var getByQuery = function (query) {
+    return createPromise(query);
+}
+
 var getEntity = function (table, where, orderBy, limit) {
-	return createPromise(createSelectQuery(table, where, orderBy, limit));
+    return createPromise(createSelectQuery(table, where, orderBy, limit));
 }
 
 var createSelectQuery = function (table, where, orderBy, limit) {
@@ -141,6 +145,7 @@ var checkFieldType = function (table) {
 
 
 module.exports = {
+    getByQuery: getByQuery,
     insertEntity: insertEntity,
     getEntity: getEntity,
     updateEntity: updateEntity,

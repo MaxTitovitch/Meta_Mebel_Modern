@@ -1,6 +1,9 @@
 const SYSTEM_ERROR_HEAD = 'В системе - СБОЙ!';
 const E404_ERROR_HEAD = 'Страница не обнаружена!';
 const SERVER_PORT = 3000;
+const SELECT_USERMEDALS = 'SELECT * FROM medals JOIN usermedals ON medals.id=usermedals.medalD WHERE usermedals.userID=';
+const SELECT_USER_AND_TSHIRT = 'SELECT tshirts.*, users.fullName FROM tshirts JOIN users ON tshirts.userID=users.id WHERE tshirts.id=';
+const SELECT_COMMENTS = 'SELECT comments.*, users.fullName, COUNT(likes.id) as quantity FROM comments LEFT JOIN likes ON comments.id=likes.commentID JOIN users ON users.id=comments.userID WHERE comments.tshirtID=';
 
 var express = require('express');
 var app = express();
@@ -25,7 +28,7 @@ Date.prototype.toISO = function() {
         this.getFullYear(),
         (mm>9 ? '' : '0') + mm,
         (dd>9 ? '' : '0') + dd
-    ].join('');
+    ].join('-');
 };
 
 
@@ -138,7 +141,6 @@ var doAuth = function (req, res, path) {
             if (err) { 
                 res.render('error', {error: err, title: SYSTEM_ERROR_HEAD});
             }
-            console.log(user, path)
             return res.redirect(path);
         });
     })(req, res);
@@ -158,7 +160,8 @@ app.get('/auth', urlencodedParser, authFun, function (req, res) {
 });
 
 app.post('/auth', urlencodedParser, function (req, res) {
-    return doAuth(req, res, '/users/' + req.session.passport.user) 
+    var path = req.session.passport == undefined ? '/' : '/users/' + req.session.passport.user; 
+    return doAuth(req, res, path) 
 });
 
 var createUser = function (body, token) {
@@ -193,14 +196,21 @@ app.post('/registry', urlencodedParser, function (req, res) {
 
 
 app.get('/users/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
-    mysql.getEntity('users', 'id=' + req.params.index).then(users => {
+    mysql.getEntity('users', 'id=' + req.params.index + ' OR id=' + req.session.passport.user).then(users => {
         mysql.getEntity('tshirts', 'userID=' + req.params.index).then(tshirts => {
             if(users.length < 1){
                 res.redirect('/');
             } else {
-                var user = users[0];
+                var user = users[0].id ==  req.session.passport.user ? users[0]: users[1];
+                var thisUser = users[0].id ==  req.session.passport.user ? users[1]: users[0];
+                thisUser = thisUser == undefined ? user : thisUser;
                 mysql.getEntity('users').then(allUsers => {
-                    res.render('userpanel', {user: user, tshirts: tshirts, allUsers: allUsers});
+                    mysql.getByQuery(SELECT_USERMEDALS + user.id).then(medals => {
+                        // user.dateOfBirth  = user.dateOfBirth.toISO();
+                        res.render('userpanel', {user: user, tshirts: tshirts, allUsers: allUsers, thisUser: thisUser, medals: medals});
+                    }).catch(error => { 
+                        res.redirect('/');
+                    });
                 }).catch(error => { 
                     res.redirect('/');
                 });
@@ -211,6 +221,31 @@ app.get('/users/:index', urlencodedParser, authFun, verifyFun, function (req, re
     }).catch(error => { 
         res.redirect('/');
     });
+});
+
+app.get('/tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
+        mysql.getByQuery(SELECT_USER_AND_TSHIRT + req.params.index).then(tshirts => {
+                mysql.getEntity('rankings', 'userID=' + app.locals.user.id + ' AND tshirtID=' + tshirts[0].id).then(rankings => {
+                    mysql.getByQuery(SELECT_COMMENTS + tshirts[0].id + ' GROUP BY comments.id').then(comments => {
+                        mysql.getEntity('likes', 'userID=' + app.locals.user.id).then(likes => {
+                            mysql.getEntity('tshirttags', 'tshirtID=' + tshirts[0].id).then(tags => {
+                                res.render('tshirt', {user: app.locals.user, tshirt: tshirts[0], rankings: rankings[0], comments: comments, likes: likes, tags: tags});
+                            }).catch(error => { 
+                                res.redirect('/');
+                            });
+                        }).catch(error => { 
+                            res.redirect('/');
+                        });
+                    }).catch(error => { 
+                        console.log(error);
+                        res.redirect('/');
+                    });
+                }).catch(error => { 
+                    res.redirect('/');
+                });
+        }).catch(error => { 
+            res.redirect('/');
+        });
 });
 
 

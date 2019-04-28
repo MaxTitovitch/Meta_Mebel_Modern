@@ -115,3 +115,97 @@ main {
     margin: auto;
     width: 40%;
 }
+
+
+.big-medal {
+    width: 15%;
+}
+
+.user-data-form {
+    width: 40%;
+    margin: auto;
+}
+
+.users-table {
+    display: flow-root;
+}
+
+.big-photo {
+    width: 100%;
+}
+
+
+.rating_block, .rating_block-static {
+    width: 125px;
+    height: 25px;
+    /*float: right;*/
+}
+
+.rating_block input[type="radio"], .rating_block-static input[type="radio"]{
+    display: none;
+}
+
+.label_rating {
+    float: right;
+    display: block;
+    width: 25px;
+    height: 25px;
+    opacity: 0.7;
+    background: url(http://pngimg.com/uploads/star/star_PNG41441.png) no-repeat 50% 0;
+    background-size: cover;
+    cursor: pointer;
+}
+
+.rating_block-static .label_rating {
+    float: left !important;
+    opacity: 1 !important;
+}
+
+.rating_block-static input[type="radio"]:checked ~ .label_rating {
+    opacity: 0.7 !important;
+}
+
+/*.rating_block-static input[type="radio"]:checked Правило для всех следующих лейблов после выбранного инпута, чтобы звездочки как бы зафиксировались
+{
+    opacity: 0.1;
+}*/
+
+.rating_block .label_rating:hover, /*Правило для ховера на текущий лейбл*/
+.rating_block .label_rating:hover ~ .label_rating, /*Правило для всех следующих лейблов по DOM дереву*/
+.rating_block input[type="radio"]:checked ~ .label_rating /*Правило для всех следующих лейблов после выбранного инпута, чтобы звездочки как бы зафиксировались*/
+{
+    opacity: 1;
+    /*background-position: 50% -25px;*/
+}
+
+.comment-zone {
+    width: 40%;
+    margin: auto;
+}
+
+.comment {
+    border: 1px solid #cfd1cd;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.left-float {
+    float: left;
+}
+
+.likes {
+    text-align: right;
+}
+
+.liked {
+    opacity: 1;
+}
+
+.no-liked {
+    opacity: 0.6;
+}
+
+.modal-header {
+    background-color: #007bff;
+}
