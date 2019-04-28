@@ -320,6 +320,80 @@ app.get('/tokenverify/:tokenid', urlencodedParser, function (req, res) {
     });
 });
 
+// For: AJAX
+
+app.post('/savesetting', urlencodedParser, function (req, res) {
+    res.send( saveUser(req.body, 1));
+});
+
+var saveUser = function (user, savetype) {
+        console.log(user)
+
+    if(user.id == 0) return addUser(user);
+    mysql.getEntity('users', 'id=' + user.id).then(users => {
+        var entityUser = savetype == 1 ? updateUser (users[0], user) : updateUserByAdmin (users[0], user);
+        mysql.updateEntity('users', entityUser.id, entityUser).then(result => {
+            return 'OK';
+        }).catch(error => {
+            return 'ERROR';
+        });
+    }).catch(error => {
+        return 'ERROR';
+    });
+}
+
+var addUser = function (user) {
+    delete user.id;
+    user.language = "RU";
+    user.theme = "WHITE";
+    user.verify = 0;
+    user.token = createToken();
+    mysql.insertEntity('users', user).then(result => {
+        return 'OK';
+    }).catch(error => {
+        return 'ERROR';
+    });
+}
+
+var updateUserByAdmin = function (lastUser, newData) {
+    lastUser.fullName = newData.fullName;
+    lastUser.role = newData.role;
+    lastUser.dateOfBirth = newData.date;
+    lastUser.email = newData.email;
+    lastUser.password = newData.password;
+    return lastUser;
+}
+
+var updateUser = function (lastUser, newData) {
+    lastUser.language = newData.language;
+    lastUser.theme = newData.theme;
+    lastUser.fullName = newData.fullName;
+    lastUser.dateOfBirth = newData.date;
+    lastUser.password = newData.password;
+    return lastUser;
+}
+
+app.post('/removeuser', urlencodedParser, function (req, res) {
+    mysql.deleteEntity('users', 'id=' + req.body.id).then(result => {
+        res.send('OK');
+    }).catch(error => {
+        res.send('ERROR');
+    });
+});
+
+app.post('/saveuser', urlencodedParser, function (req, res) {
+    res.send( saveUser(req.body, 0));
+});
+
+
+app.post('/addorder', urlencodedParser, function (req, res) {
+    res.send( saveOrder(req.body.order, req.body.orderTshirts) );
+});
+
+var saveOrder = function (order, orderTshirts) {
+    return 'Hello';
+}
+
 //Страница 404
 
 
@@ -337,4 +411,5 @@ app.use(function(req, res, next){
 app.listen(3000, function () {
     console.log('Server running on port №3000...');
 });
+
 

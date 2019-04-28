@@ -7,7 +7,9 @@ const TSHIRT_FIELDS = ['name', 'image', 'html', 'shortText', 'price', 'ranking',
 const TSHIRTTAGS_FIELDS = ['tshirtID', 'tagName'];
 const USERMEDAL_FIELDS = ['userID', 'medalID'];
 const USER_FIELDS = ['email', 'password', 'role', 'fullName', 'dateOfBirth', 'language', 'theme', 'verify', 'token'];
-
+const TSHIRTTAGS_FIELDS = ['tshirtID', 'tagName'];
+const ORDER_FIELDS = ['userID', 'address', 'phone'];
+const ORDERTSHIRT_FIELDS = ['tshirtID', 'orderID', 'gender', 'size', 'color'];
 
 var pool  = mysql.createPool({
 	host     : 'localhost',
