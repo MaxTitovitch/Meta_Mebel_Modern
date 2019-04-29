@@ -1,0 +1,29 @@
+<%- include('header'); -%>
+<main>
+<!--     <p class="main"><%= myLocalize.translate("Теги:")%></p>
+	<div class="main main-tags">
+        <a href="/search?value=sport" class="badge badge-pill badge-dark">Sport</a>
+        <a href="/search?value=love" class="badge badge-pill badge-dark">Love</a>
+        <a href="/search?value=russia" class="badge badge-pill badge-dark">Russia</a>
+        <a href="/search?value=anime" class="badge badge-pill badge-dark">Anime</a>
+        <a href="/search?value=got" class="badge badge-pill badge-dark">GOT</a>
+    </div> -->
+
+    <h2 class="main"><%= myLocalize.translate("Запрос:")%> <%= query %></h2>
+    <div class="main main-new">
+        <% tshirts.forEach(function(tshirt){ %>
+            <a href="tshirt/<%= tshirt.id %>">
+                <div class="t-shirt-one">
+                    <img class="t-shirt" src="/public/img/test.jpg">
+                    <div>
+                     <!--    <%= tshirts.image %> -->
+                        <%= tshirt.name %>  
+                    </div>
+                </div>
+            </a>
+        <% }); %>
+    </div>
+
+</main> 
+
+<%- include('footer'); -%>

@@ -76,22 +76,29 @@
       <div class="comment">
         <div class="likes">
           <div class="form-group">
-          <input id="new-comment" type="text" class="form-control" placeholder="<%= myLocalize.translate("Коментарий")%>" required="true" /> 
+          <input id="new-comment" type="text" class="form-control" placeholder="<%= myLocalize.translate("Коментарий")%>" required="true" />
+          <input id="count-comment" type="hidden" value="<%= sizeComment%>" /> 
           </div>
           <button id="add-comment" class="form-control btn btn-primary" type="submit"><%= myLocalize.translate("Добавить")%></button>
         </div>
       </div>
+
       <% for (var i = 0; i < comments.length; i++) { -%>
-        <div class="comment">
+        <div id="comment-<%= comments[i].id %>" class="comment">
           <a href="<%= comments[i].userID %>"><%= comments[i].fullName %></a>
           <p class="text-simple"><%= comments[i].text %></p>
           <p class="text-primary left-float"><%= comments[i].date.toISO() %></p>
           <div class="likes">
             <%= comments[i].quantity %>
-            <img src="https://cdn.icon-icons.com/icons2/1283/PNG/512/1497619993-jd04_85160.png" width="30px" class="liked"/>
+            <img src="/public/img/like.png" width="30px" class="comment-like <%= likes.indexOf(comments[i].id) == -1 ? 'no-' : '' %>liked"/>
           </div>
         </div>
       <% } -%>
+
+      <% for (var i = 0; i < pages.length; i++) { -%>
+        <a class="page" href="/tshirt/<%= tshirt.id %>?page=<%= i+1 %>"><%= i+1 %></a>
+      <% } -%>
+
     </div>
   </div>
 

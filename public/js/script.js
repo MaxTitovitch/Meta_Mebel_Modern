@@ -12,6 +12,9 @@ jQuery(function($) {
     $('#user_ranking input').click(onSaveRanking);
     $('#new-tag').keyup(onAddTag);
     $('#add-comment').click(onAddComment);
+    $('.comment-like').click(onAddLike);
+    addPulsComment();
+    disableLink();
 });
 
 
@@ -163,16 +166,61 @@ var onAddComment = function (event) {
     var text = $('#new-comment').val();
     if(text != '') {
         var comment = {
-            h: "k"
+            userID: $("#user-index").val(),
+            tshirtID: location.pathname.split('/')[2],
+            text: text
+        }
+        $('#new-comment').val("");
+        addAjaxQuery('/addcomment', comment, 'post', updateSettingSuccess, function(){});
+    }
+}
+
+var addPulsComment = function () {
+    if(location.pathname.split('/')[1] == "tshirt") {
+        var currentSize = $("#count-comment").val();
+        var timerId = setInterval(function() {
+            addAjaxQuery('/isneedupdate', {id: location.pathname.split('/')[2]}, 'post', isUpdateWindow(currentSize), function(){});
+        }, 5000);
+    }
+}
+
+var isUpdateWindow = function (currentSize) {
+    return function (data) {
+        if(data.size != currentSize) {
+            updateSettingSuccess();
         }
     }
 }
 
 
+var onAddLike = function () {
+    var like = {
+        userID: $("#user-index").val(),
+        commentID: $(this).parent().parent().attr('id').split('-')[1]
+    }
+    if($(this).attr('class').split(' ')[1] == 'liked'){
+        addAjaxQuery('/removelike', like, 'post', updateSettingSuccess, function(){}); 
+    } else {
 
+        addAjaxQuery('/addlike', like, 'post', updateSettingSuccess, function(){}); 
+    }
+}
 
+var disableLink = function () {
+    var pages = $('.page');            
+    if(location.search == '')
+        $(pages[0]).attr('disabled', true); 
+    else {
+        for (var i = 0; i < pages.length; i++) {
 
+            if($(pages[i]).text() == location.search.split('=')[1]) {
+                $(pages[i]).attr('href', "javascript: void(0)");
+                $(pages[i]).attr('class', "text-dark");
+            }
+        }            
+    }   
 
+}
 
 
 

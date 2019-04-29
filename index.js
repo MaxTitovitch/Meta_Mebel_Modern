@@ -3,7 +3,8 @@ const E404_ERROR_HEAD = 'Страница не обнаружена!';
 const SERVER_PORT = 3000;
 const SELECT_USERMEDALS = 'SELECT * FROM medals JOIN usermedals ON medals.id=usermedals.medalD WHERE usermedals.userID=';
 const SELECT_USER_AND_TSHIRT = 'SELECT tshirts.*, users.fullName FROM tshirts JOIN users ON tshirts.userID=users.id WHERE tshirts.id=';
-const SELECT_COMMENTS = 'SELECT comments.*, users.fullName, COUNT(likes.id) as quantity FROM comments LEFT JOIN likes ON comments.id=likes.commentID JOIN users ON users.id=comments.userID WHERE comments.tshirtID=';
+const SELECT_COMMENTS_P1 = 'SELECT comments.*, users.fullName, COUNT(likes.id) as quantity FROM comments LEFT JOIN likes ON comments.id=likes.commentID JOIN users ON users.id=comments.userID WHERE comments.tshirtID=';
+const SELECT_COMMENTS_P2 = ' GROUP BY comments.id ORDER BY comments.id DESC';
 const SELECT_BEST_TAGS = 'SELECT tagName FROM tshirttags GROUP BY tagName ORDER BY COUNT(*) DESC'
 const SELECT_ORDER_USER = 'SELECT users.email FROM users JOIN orders ON users.id = orders.userID WHERE orders.id='
 
@@ -58,7 +59,6 @@ app.use(passport.session());
 require('./auth');
 
 app.use(function(req, res, next){
-    // console.log(req.session)
     myLocalize.setLocale("RU");
     if(req.session.passport == undefined) {
         next();
@@ -165,6 +165,20 @@ app.get('/auth', urlencodedParser, authFun, function (req, res) {
     res.render('auth', {isRegistry: req.query.reg, user: app.locals.user, myLocalize: myLocalize});
 });
 
+app.get('/search', urlencodedParser, function (req, res) {
+    if(req.query.value != undefined && req.query.value != '') {
+        // mysql.getEntity('tshirts', 'tshirtID=' + tshirts[0].id).then(tags => {
+        //     var sizeComment = comments.length;
+        //     comments = getNeededComments(req.query, comments);
+        //     res.render('tshirt', {user: app.locals.user, tshirt: tshirts[0], rankings: rankings[0], comments: comments, likes: likesToArrayId(likes), tags: tags, myLocalize: myLocalize, medals: medals, sizeComment:sizeComment, pages: getPages(comments)});
+        // }).catch(error => { 
+        //     res.redirect('/');
+        // });
+    } else{
+        res.redirect('/');
+    }
+});
+
 app.post('/auth', urlencodedParser, function (req, res) {
     var path = req.session.passport == undefined ? '/' : '/users/' + req.session.passport.user; 
     return doAuth(req, res, path) 
@@ -233,11 +247,12 @@ app.get('/tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, r
         mysql.getByQuery(SELECT_USER_AND_TSHIRT + req.params.index).then(tshirts => {
             mysql.getByQuery(SELECT_USERMEDALS + tshirts[0].userID).then(medals => {
                 mysql.getEntity('rankings', 'userID=' + app.locals.user.id + ' AND tshirtID=' + tshirts[0].id).then(rankings => {
-                    mysql.getByQuery(SELECT_COMMENTS + tshirts[0].id + ' GROUP BY comments.id').then(comments => {
+                    mysql.getByQuery(SELECT_COMMENTS_P1 + tshirts[0].id + SELECT_COMMENTS_P2).then(comments => {
                         mysql.getEntity('likes', 'userID=' + app.locals.user.id).then(likes => {
                             mysql.getEntity('tshirttags', 'tshirtID=' + tshirts[0].id).then(tags => {
-                                console.log(medals);
-                                res.render('tshirt', {user: app.locals.user, tshirt: tshirts[0], rankings: rankings[0], comments: comments, likes: likes, tags: tags, myLocalize: myLocalize, medals: medals});
+                                var sizeComment = comments.length;
+                                comments = getNeededComments(req.query, comments);
+                                res.render('tshirt', {user: app.locals.user, tshirt: tshirts[0], rankings: rankings[0], comments: comments, likes: likesToArrayId(likes), tags: tags, myLocalize: myLocalize, medals: medals, sizeComment:sizeComment, pages: getPages(comments)});
                             }).catch(error => { 
                                 res.redirect('/');
                             });
@@ -257,6 +272,30 @@ app.get('/tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, r
             res.redirect('/');
         });
 });
+
+var getNeededComments = function (query, comments) {
+    if(query.page == undefined || query.page > comments.length / 10 + 1) {
+        return comments.slice(0, 10);
+    } else {
+        return comments.splice((query.page-1)*10, (query.page-1)*10 + 10);
+    }
+}
+
+var getPages = function (comments) {
+    var pages = [];
+    for (var i = 0; i < comments.length / 10 + 1; i++) {
+        pages.push(i);
+    }
+    return pages;
+}
+
+var likesToArrayId = function (likes) {
+    var idArray = [];
+    for (var like of likes) {
+        idArray.push(like.commentID);
+    }
+    return idArray;
+}
 
 app.get('/edit_tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
     mysql.getEntity('tshirttags', 'tshirtID=' + req.params.index ).then(thisTags =>  { 
@@ -385,7 +424,6 @@ app.post('/removeuser', urlencodedParser, function (req, res) {
 });
 
 app.post('/removetshirt', urlencodedParser, function (req, res) {
-    console.log(req.body.id)
     removeEntity(req, res, 'tshirts');
 });
 
@@ -414,9 +452,7 @@ app.get('/download/:index', urlencodedParser, authFun, verifyFun, function (req,
                 });
             });
         });
-        // res.send('tshirt.pdf');
     }).catch(error => { 
-        console.log(error)
         res.redirect('/');
     });
 });
@@ -425,7 +461,6 @@ app.get('/tshirt_html/:index', urlencodedParser, function (req, res) {
     mysql.getEntity('tshirts', 'id=' + req.params.index).then(tshirts => {
         res.send(tshirts[0].html)
     }).catch(error => { 
-        console.log(error)
         res.redirect('/');
     });
 });
@@ -445,6 +480,14 @@ app.post('/saveranking', urlencodedParser, function (req, res) {
                 res.send('ERROR');
             });
         }
+    }).catch(error => {
+        res.send('ERROR');
+    });
+});
+
+app.post('/addcomment', urlencodedParser, function (req, res) {
+    mysql.insertEntity('comments', req.body).then(result => {
+        res.send('OK');
     }).catch(error => {
         res.send('ERROR');
     });
@@ -475,9 +518,34 @@ app.post('/addordertshirt', urlencodedParser, function (req, res) {
     });
 });
 
+app.post('/addlike', urlencodedParser, function (req, res) {
+    mysql.insertEntity('likes', req.body).then(result => {
+        res.send('OK');
+    }).catch(error => {
+        res.send('ERROR');
+    });
+});
+
+app.post('/removelike', urlencodedParser, function (req, res) {
+    mysql.deleteEntity('likes', 'userID=' + req.body.userID + ' AND commentID=' + req.body.commentID).then(result => {
+        res.send('OK');
+    }).catch(error => {
+        res.send('ERROR');
+    });
+});
+
+app.post('/isneedupdate', urlencodedParser, function (req, res) {
+    var id = req.body.id;
+
+    mysql.getEntity('comments', 'tshirtID=' + id).then(comments => {
+        res.send({size: comments.length});
+    }).catch(error => {
+        res.send('ERROR');
+    });
+});
+
 app.post('/addmail', urlencodedParser, function (req, res) {
     var id = req.body.id;
-    console.log(id)
     mysql.getEntity('orders', 'id=' + id).then(orders => {
         mysql.getEntity('ordertshirts', 'orderID=' + id).then(orderTshirts => {
             mysql.getByQuery(SELECT_ORDER_USER + id).then(orderUser => {
