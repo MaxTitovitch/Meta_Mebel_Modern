@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MetaMebelModern</title>
+
+    <!-- Иконка -->
+    <link rel="shortcut icon" href="/public/img/brain.png" type="image/png">
+
+    <!-- Скрипты -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/public/js/jquery/jquery-ui.min.js"></script>
+    <script src="/public/js/script.js"></script>
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <% if (user != null) { -%> 
+      <link rel="stylesheet" type="text/css" href="/public/css/<%= user.theme == 'BLACK' ? 'dark-' : '' %>style.css">
+    <% } else { -%>
+      <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+    <% } -%>
+</head>
+<body>
+  <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
+    <input type="hidden" name="receiver" value="410018661240782">
+    <input type="hidden" name="formcomment" value="Покупка майки">
+    <input type="hidden" name="short-dest" value="Покупка майки">
+    <input type="hidden" name="label" value="<%= index %>">
+    <input type="hidden" name="quickpay-form" value="donate">
+    <input type="hidden" name="targets" value="<%= index %>">
+    <input type="hidden" name="sum" value="<%= order.price %>" data-type="number">
+    <input type="hidden" name="comment" value="Покупка майки">
+    <input type="hidden" name="need-fio" value="true">
+    <input type="hidden" name="need-email" value="true"> 
+    <input type="hidden" name="need-phone" value="false">
+    <input type="hidden" name="need-address" value="false">
+    <label><input type="radio" name="paymentType" value="PC">Яндекс.Деньгами</label>
+    <label><input type="radio" name="paymentType" value="AC">Банковской картой</label>
+    <input type="submit" value="Купить">
+</form>
+</body>
