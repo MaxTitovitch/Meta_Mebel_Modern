@@ -13,6 +13,7 @@ jQuery(function($) {
     $('#new-tag').keyup(onAddTag);
     $('#add-comment').click(onAddComment);
     $('.comment-like').click(onAddLike);
+    $('#search').click(onSearch);
     addPulsComment();
     disableLink();
 });
@@ -222,6 +223,10 @@ var disableLink = function () {
 
 }
 
+var onSearch = function (event) {
+    event.preventDefault();
+    window.location.replace('/search?value=' + $('#search-value').val()); 
+}
 
 
 
@@ -302,15 +307,3 @@ var disableLink = function () {
 
 
 
-
-
-// function createAjaxRequest() {
-//     $.ajax({
-//         url: "/readFile",
-//         method: "post",
-//         contentType: false, 
-//         processData: false,
-//         data: new FormData($("#my-form").get(0)),
-//         success: checkFile
-//     });
-// }

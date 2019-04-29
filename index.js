@@ -7,6 +7,8 @@ const SELECT_COMMENTS_P1 = 'SELECT comments.*, users.fullName, COUNT(likes.id) a
 const SELECT_COMMENTS_P2 = ' GROUP BY comments.id ORDER BY comments.id DESC';
 const SELECT_BEST_TAGS = 'SELECT tagName FROM tshirttags GROUP BY tagName ORDER BY COUNT(*) DESC'
 const SELECT_ORDER_USER = 'SELECT users.email FROM users JOIN orders ON users.id = orders.userID WHERE orders.id='
+const FULL_TEXT_QUERY = "SELECT tshirts.* FROM tshirts LEFT JOIN comments ON tshirts.id = comments.tshirtID LEFT JOIN `tshirttags` ON `tshirts`.id = `tshirttags`.tshirtID WHERE (MATCH (`comments`.`text`) AGAINST ('TO_REPLACE')) OR (MATCH (`tshirts`.`name`, `tshirts`.`shortText`) AGAINST ('TO_REPLACE')) OR (MATCH (`tshirttags`.`tagName`) AGAINST ('TO_REPLACE')) GROUP BY tshirts.id"
+
 
 var express = require('express');
 var app = express();
@@ -167,13 +169,13 @@ app.get('/auth', urlencodedParser, authFun, function (req, res) {
 
 app.get('/search', urlencodedParser, function (req, res) {
     if(req.query.value != undefined && req.query.value != '') {
-        // mysql.getEntity('tshirts', 'tshirtID=' + tshirts[0].id).then(tags => {
-        //     var sizeComment = comments.length;
-        //     comments = getNeededComments(req.query, comments);
-        //     res.render('tshirt', {user: app.locals.user, tshirt: tshirts[0], rankings: rankings[0], comments: comments, likes: likesToArrayId(likes), tags: tags, myLocalize: myLocalize, medals: medals, sizeComment:sizeComment, pages: getPages(comments)});
-        // }).catch(error => { 
-        //     res.redirect('/');
-        // });
+        var query = FULL_TEXT_QUERY.split('TO_REPLACE').join(req.query.value);
+        mysql.getByQuery(query).then(tshirts => {
+            console.log(tshirts)
+            res.render('search', {user: app.locals.user, query: req.query.value, tshirts: tshirts, myLocalize: myLocalize});
+        }).catch(error => {   
+            res.redirect('/');
+        });
     } else{
         res.redirect('/');
     }
