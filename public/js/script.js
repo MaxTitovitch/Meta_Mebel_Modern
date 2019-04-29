@@ -14,6 +14,11 @@ jQuery(function($) {
     $('#add-comment').click(onAddComment);
     $('.comment-like').click(onAddLike);
     $('#search').click(onSearch);
+    $('#add-text-img').click(onAddTextImg);
+    $('#gender-tshirt div input').click(onChangeGender);
+    $('#save-tshirt').click(onSaveTshirt);
+    $('#color').change(onChangeColor);
+    $('#myfile').change(onDragEnter);
     addPulsComment();
     disableLink();
 });
@@ -118,6 +123,7 @@ var onOrderAdded = function (orderTshirt) {
 
 var addMailMessage = function (id) {
     return function (data) {
+        window.location.replace('/'); 
         addAjaxQuery('/addmail', {id: id}, 'post', updateSettingSuccess, function(){});
     }
 }
@@ -202,7 +208,6 @@ var onAddLike = function () {
     if($(this).attr('class').split(' ')[1] == 'liked'){
         addAjaxQuery('/removelike', like, 'post', updateSettingSuccess, function(){}); 
     } else {
-
         addAjaxQuery('/addlike', like, 'post', updateSettingSuccess, function(){}); 
     }
 }
@@ -228,19 +233,84 @@ var onSearch = function (event) {
     window.location.replace('/search?value=' + $('#search-value').val()); 
 }
 
+ var onChangeColor = function (event) {
+    $("#clippedDiv").attr('style', 'background-color: ' + $(this).val() + ';');
+    $("#miniPolygon").attr('style', 'background-color: ' + $(this).val() + ';');
+ }
+
+var onAddTextImg = function (event) {
+    var text = $('<p contentEditable="true">' + $('#added-text').val() + '</p>', {});
+    text.css({
+        'font-size': $('#added-size').val() + "px",
+        'color': $('#added-color').val(),
+        'padding-top': '60px',
+        'padding-left': '160px',
+    });
+    $('#clippedDiv').append(text);
+    $(text).draggable();
+    $('#addTextModal').modal('hide');
+}
+
+var onDragEnter = function (event) {
+    $.ajax({
+        url: "/saveimg",
+        method: "post",
+        contentType: false, 
+        processData: false,
+        data: new FormData($("#my-form").get(0)),
+        success: checkFile
+    });
+}
+
+var checkFile = function (data) {
+    var img = $('<img>', {"src": data});
+    img.css({
+        'width': "300px",
+    });
+    $('#clippedDiv').append(img);
+    $(img).draggable();
+}
 
 
+var onChangeGender = function (event) {
+    if($(this).val() == "M") {
+        $("#clippedDiv").addClass("men-poly");
+        $("#clippedDiv").removeClass("women-poly");
+        $("#miniPolygon").addClass("men-mini");
+        $("#miniPolygon").removeClass("women-mini");
+    } else {
+        $("#clippedDiv").removeClass("men-poly");
+        $("#clippedDiv").addClass("women-poly");
+        $("#miniPolygon").removeClass("men-mini");
+        $("#miniPolygon").addClass("women-mini");
 
+    }
+}
 
+var onSaveTshirt = function (event) {
+    var tags = '';
+    for (var i = 0; i < $(".badge-dark").length; i++) {
+        tags += $(".badge-dark").eq(i).text ();
+        if(i+1 < $(".badge-dark").length) tags += ',';
+    }
+    var tshirt = {
+        id: location.pathname.split('/')[2],
+        name: $("#name").val(),
+        image: "",
+        html: $(".img-container").html(),
+        shortText: $("#shortText").val(),
+        price: $("#price").val(),
+        ranking: 0,
+        userID: $("#user-index").val(),
+        color:  $("#clippedDiv").css('background-color'),
+        tags: tags
+    }
+    addAjaxQuery('/addtshirt', tshirt, 'post', doRedirecr, function(){}); 
+}
 
-
-
-
-
-
-
-
-
+var doRedirecr = function (data) {
+    window.location.replace('/tshirt/' + data);
+}
 
 
 

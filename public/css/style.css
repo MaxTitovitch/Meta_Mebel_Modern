@@ -214,16 +214,6 @@ main {
     background-color: #007bff;
 }
 
-.edited-img {
-    width: 100%;
-    margin: auto;
-}
-
-.img-container {
-    width: 600px;
-    margin: auto;
-}
-
 .add-tag-space {
     width: 10%;
     display: inline;

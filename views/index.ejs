@@ -14,7 +14,9 @@
         <% newEntitys.forEach(function(newEntity){ %>
             <a href="tshirt/<%= newEntity.id %>">
                 <div class="t-shirt-one">
-                    <img class="t-shirt" src="/public/img/test.jpg">
+                    <iframe width="100%" height="200" src="http://127.0.0.1:3000/download/<%= newEntity.id%>" name="iframe" scrolling="no"> </iframe>
+
+                    <!-- <img class="t-shirt" src="/public/img/test.jpg"> -->
                     <div>
                      <!--    <%= newEntitys.image %> -->
                         <%= newEntity.name %>  
@@ -29,7 +31,8 @@
         <% bestEntitys.forEach(function(bestEntity){ %>
             <a href="tshirt/<%= bestEntity.id %>">
                 <div class="t-shirt-one">
-                    <img class="t-shirt" src="/public/img/test.jpg">
+                    <iframe width="100%" height="200" src="http://127.0.0.1:3000/download/<%= bestEntity.id%>" name="iframe" scrolling="no"> </iframe>
+                    <!-- <img class="t-shirt" src="/public/img/test.jpg"> -->
                     <div>
                        <!--  <%= bestEntity.image %> -->
                         <%= bestEntity.name %>  

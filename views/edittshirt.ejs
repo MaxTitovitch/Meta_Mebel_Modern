@@ -1,15 +1,18 @@
 <%- include('header'); -%>
 <main>  
 
-    <form class="auth-form" method="post" action="/registry">
+
+
+
+    <form id="my-form" class="auth-form" method="post" action="/saveimg"  enctype="multipart/form-data">
         <h3><%= myLocalize.translate("Конструктор")%>: </h3>
       <div class="form-group">
         <label for="name"><%= myLocalize.translate("Название")%>:</label>
         <input name="name" id="name" type="text" class="form-control" placeholder="<%= myLocalize.translate("Название")%>" required="true" value="<%= tshirt != undefined ? tshirt.name : '' %>">
       </div>
       <div class="form-group">
-        <label for="password"><%= myLocalize.translate("Описание")%>:</label>
-        <textarea name="password" id="password" class="form-control" placeholder="<%= myLocalize.translate("Описание")%>" required="true"><%= tshirt != undefined ? tshirt.shortText : '' %></textarea>
+        <label for="shortText"><%= myLocalize.translate("Описание")%>:</label>
+        <textarea name="shortText" id="shortText" class="form-control" placeholder="<%= myLocalize.translate("Описание")%>" required="true"><%= tshirt != undefined ? tshirt.shortText : '' %></textarea>
       </div>
       <div class="form-group">
         <label for="price"><%= myLocalize.translate("Цена")%>:</label>
@@ -21,17 +24,17 @@
       </div>
 
       <fieldset class="form-group">
-        <div class="row">
+        <div class="row" id="gender-tshirt">
           <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Пол")%>:</legend>
           <div class="col-sm-10">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="gender" id="gridRadios1" value="RU" checked>
+              <input class="form-check-input" type="radio" name="gender" id="gridRadios1" value="M" checked>
               <label class="form-check-label" for="gridRadios1">
                 <%= myLocalize.translate("Мужской")%>
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="gender" id="gridRadios2" value="EN">
+              <input class="form-check-input" type="radio" name="gender" id="gridRadios2" value="F">
               <label class="form-check-label" for="gridRadios2">
                 <%= myLocalize.translate("Женский")%>
               </label>
@@ -41,18 +44,26 @@
       </fieldset>
 
       <div class="form-group">
-        <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#exampleModal">
+        <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#addTextModal">
             <%= myLocalize.translate("Добавить текст")%>
         </button>
         </div>
-      <div class="form-group">
-          <button type="submit" class="btn btn-primary form-control" disabled="disabled" ><%= myLocalize.translate("Добавьте картинку")%>: Drag-N-Drop</button>
-        </div>
+      <div class="custom-file">
+        <input type="file" id="myfile" name="myfile" class="custom-file-input" id="customFileLang" lang="es">
+        <label class="custom-file-label" for="customFileLang"><%= myLocalize.translate("Добавьте картинку")%>: Drag-N-Drop</label>
+      </div>
     </form>
-    <div class="img-container">
-        <img src="/public/img/tsm.png" class="edited-img men-img" >
-        <!-- <p><-%= //tshirt != undefined ? tshirt.html : '' %></p> -->
-        <!-- <img src="/public/img/tsf.png" class="edited-img women-img"> -->
+
+
+    <div class='img-container'>    
+      <link rel='stylesheet' type='text/css' href='/public/css/edit-style.css'>
+
+        <div id='miniPolygon' class='men-mini' style='background-color: #00ff00;'>
+
+        </div>
+        <div id='clippedDiv' class='men-poly' style='background-color: #00ff00;'>
+
+        </div>
     </div>
 
     <div class="container">
@@ -64,23 +75,23 @@
         </div>  
 
       <div class="form-group">
-          <button type="submit" class="btn btn-primary form-control"><%= myLocalize.translate("Сохранить")%></button>
+          <button id="save-tshirt" type="button" class="btn btn-primary form-control"><%= myLocalize.translate("Сохранить")%></button>
     </div>
     </div>
 
 
 <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="addTextModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel"><%= myLocalize.translate("Добавить текст")%></h5>
+            <h5 class="modal-title" id="addTextModalLabel"><%= myLocalize.translate("Добавить текст")%></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-
+          <input id="user-index" type="hidden" required="true" value="<%= user.id %>">
           <div class="form-group">
                 <label for="added-text"><%= myLocalize.translate("Текст")%>:</label>
                 <input name="added-text" id="added-text" type="text" class="form-control" placeholder="Текст" required="true">
@@ -97,7 +108,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= myLocalize.translate("Отмена")%></button>
-            <button type="button" class="btn btn-primary"><%= myLocalize.translate("Добавить")%></button>
+            <button id="add-text-img" type="button" class="btn btn-primary"><%= myLocalize.translate("Добавить")%></button>
           </div>
         </div>
       </div>

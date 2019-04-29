@@ -26,7 +26,7 @@ var getConnection = function(callback) {
 var createPromise = function (query) {
 	return new Promise((resolve, reject) => {
 		getConnection((err, connection) => {
-            console.log(query);
+            // console.log(query);
 			connection.query(query, function(err, rows) {
 				if (err) reject(err);
 				resolve(rows);

@@ -24,6 +24,7 @@ nav {
 
 .head-info {
     float: left;
+
 }
 
 .phone-img {
@@ -230,16 +231,6 @@ main {
     background-color: #007bff;
 }
 
-.edited-img {
-    width: 100%;
-    margin: auto;
-}
-
-.img-container {
-    width: 600px;
-    margin: auto;
-}
-
 .add-tag-space {
     width: 10%;
     display: inline;
@@ -272,8 +263,6 @@ main {
 .table tbody tr{
     background-color: #cfd1cd;
 }
-
-
 
 
 

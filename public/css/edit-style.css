@@ -1,0 +1,56 @@
+
+.edited-img {
+    width: 100%;
+    margin: auto;
+}
+
+.img-container {
+	background-image: url('/public/img/tsm.png');
+    width: 600px;
+    height: 400px;
+    margin: auto;
+}
+
+#clippedDiv{
+    width:100%;
+    height:100%;
+    /*background-color:black;*/
+	resize: 
+}
+
+
+#miniPolygon {
+	position: absolute;
+	width: 100%;
+	height: 25%;
+    /*background-color:grean;*/
+    opacity: 0.7;
+}
+
+.men-poly {
+    -webkit-clip-path: polygon(190px 30px, 134px 63px, 80px 143px, 141px 183px, 189px 110px, 190px 367px, 410px 367px, 410px 111px, 458px 185px, 520px 146px, 465px 60px, 410px 30px, 348px 30px, 332px 56px, 313px 67px, 285px 67px, 270px 56px, 252px 30px, 190px 30px);
+    clip-path: polygon(190px 30px, 134px 63px, 80px 143px, 141px 183px, 189px 110px, 190px 367px, 410px 367px, 410px 111px, 458px 185px, 520px 146px, 465px 60px, 410px 30px, 348px 30px, 332px 56px, 313px 67px, 285px 67px, 270px 56px, 252px 30px, 190px 30px);
+}
+
+.women-poly {
+    -webkit-clip-path: polygon(230px 30px, 174px 60px, 128px 123px, 160px 153px, 209px 103px, 220px 203px, 217px 252px, 207px 365px, 390px 365px, 380px 256px, 380px 233px, 393px 105px, 438px 152px, 471px 122px, 422px 60px, 361px 31px, 337px 31px, 310px 48px, 290px 50px, 261px 32px, 230px 30px);
+    clip-path: polygon(230px 30px, 174px 60px, 128px 123px, 160px 153px, 209px 103px, 220px 203px, 217px 252px, 207px 365px, 390px 365px, 380px 256px, 380px 233px, 393px 105px, 438px 152px, 471px 122px, 422px 60px, 361px 31px, 337px 31px, 310px 48px, 290px 50px, 261px 32px, 230px 30px);
+}
+
+.men-mini {
+
+    clip-path: polygon(348px 30px, 332px 56px, 313px 67px, 285px 67px, 270px 56px, 252px 30px,348px 30px);
+    -webkit-clip-path: polygon(348px 30px, 332px 56px, 313px 67px, 285px 67px, 270px 56px, 252px 30px,348px 30px);
+}
+
+.women-mini {
+    clip-path: polygon(337px 31px, 310px 48px, 290px 50px, 261px 32px, 337px 31px);
+    -webkit-clip-path: polygon(337px 31px, 310px 48px, 290px 50px, 261px 32px, 337px 31px);
+}
+
+#drag-n-drop{
+	height: 100px !important;
+}
+
+
+

@@ -23,9 +23,11 @@ var crypto = require('crypto');
 const sendmail = require('sendmail')();
 var messages =require('./messages');
 const phantom = require('phantom');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 var Localize = require('localize');
 var myLocalize = new Localize(JSON.parse(require('fs').readFileSync(__dirname + "/locale/locales.json", "utf8")));
-
+var fs = require('fs');
 
 Date.prototype.toISO = function() {
     var mm = this.getMonth() + 1;
@@ -37,8 +39,10 @@ Date.prototype.toISO = function() {
         (dd>9 ? '' : '0') + dd
     ].join('-');
 };
-
-
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
 app.use('/public', express.static('public'));
 
 app.use(
@@ -376,6 +380,14 @@ app.post('/savesetting', urlencodedParser, function (req, res) {
     res.send( saveUser(req.body, 1));
 });
 
+app.post('/saveimg', urlencodedParser, upload.single('myfile'),  function (req, res) {
+
+    var target_path =  '/public/uploads/' + createToken() + req.file.originalname;
+    fs.writeFileSync(__dirname + target_path, req.file.buffer)
+    // console.log(req.file.buffer);
+    res.send(target_path);
+});
+
 var saveUser = function (user, savetype) {
     if(user.id == 0) return addUser(user);
     mysql.getEntity('users', 'id=' + user.id).then(users => {
@@ -443,13 +455,15 @@ app.post('/saveuser', urlencodedParser, function (req, res) {
 
 app.get('/download/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
     mysql.getEntity('tshirts', 'id=' + req.params.index).then(tshirts => {
-        var name = __dirname + '/public/tshirts/tshirt' + tshirts[0].id + '.pdf'
+        var name = __dirname + '/public/tshirts/tshirt' + tshirts[0].id + '.png'
         phantom.create().then(function(ph) {
             ph.createPage().then(function(page) {
-                page.open('http://localhost:3000/tshirt_html/' + tshirts[0].id).then(function(status) {
-                    page.render(name).then(function() {
-                        res.sendFile(name);
-                        ph.exit();
+                page.property('viewportSize', {width: 600, height: 400}).then(function() {
+                    page.open('http://localhost:3000/tshirt_html/' + tshirts[0].id).then(function(status) {
+                        page.render(name).then(function() {
+                            res.sendFile(name);
+                            ph.exit();
+                        });
                     });
                 });
             });
@@ -461,7 +475,7 @@ app.get('/download/:index', urlencodedParser, authFun, verifyFun, function (req,
 
 app.get('/tshirt_html/:index', urlencodedParser, function (req, res) {  
     mysql.getEntity('tshirts', 'id=' + req.params.index).then(tshirts => {
-        res.send(tshirts[0].html)
+        res.send(tshirts[0].html);
     }).catch(error => { 
         res.redirect('/');
     });
@@ -563,6 +577,53 @@ app.post('/addmail', urlencodedParser, function (req, res) {
         res.send('ERROR');
     });
 });
+
+app.post('/addtshirt', urlencodedParser, function (req, res) {
+    var tshirt = req.body;
+    tshirt.image = getImage(tshirt.id);
+    tshirt.html = tshirt.html.replaceAll('"', "'");
+    var tag = tshirt.tags;
+    delete tshirt.tags;
+    if(tshirt.id == 0 ) {
+        mysql.insertEntity('tshirts', tshirt).then(result => {
+            mysql.getEntity('tshirts', '',  'id DESC').then(tshirts => {
+                addTags(tag, tshirts[0].id);
+                res.send(tshirts[0].id);
+            }).catch(error => {
+                res.send('ERROR');
+            });
+        }).catch(error => {    
+            res.send('ERROR');
+        });
+    } else {
+        var id = tshirt.id;
+        mysql.updateEntity('tshirts', tshirt.id, tshirt).then(result => {
+            addTags(tag, id);
+            res.send(id);
+        }).catch(error => {
+            console.log(error)
+            res.send('ERROR');
+        });
+    }
+});
+
+var getImage = function (id) {
+    return "";
+}
+
+var addTags = function (tags, tshirtID){
+    var tagsArray = new String(tags).split(','), tag = {
+        tshirtID: tshirtID,  
+        tagName: "",  
+    };
+    for (var i = 0; i < tagsArray.length; i++) {
+        tag.tagName = tagsArray[i];
+        mysql.insertEntity('tshirttags', tag).then(result => {}).catch(error => {
+
+        })
+    }
+
+}
 
 var createMessage = function (order, orderTshirts) {
     var head ="Новый заказ ОФОРМЛЕН!", body;
