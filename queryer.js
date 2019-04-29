@@ -7,7 +7,6 @@ const TSHIRT_FIELDS = ['name', 'image', 'html', 'shortText', 'price', 'ranking',
 const TSHIRTTAGS_FIELDS = ['tshirtID', 'tagName'];
 const USERMEDAL_FIELDS = ['userID', 'medalID'];
 const USER_FIELDS = ['email', 'password', 'role', 'fullName', 'dateOfBirth', 'language', 'theme', 'verify', 'token'];
-const TSHIRTTAGS_FIELDS = ['tshirtID', 'tagName'];
 const ORDER_FIELDS = ['userID', 'address', 'phone'];
 const ORDERTSHIRT_FIELDS = ['tshirtID', 'orderID', 'gender', 'size', 'color'];
 
@@ -116,6 +115,8 @@ var checkFieldType = function (table) {
         case 'tshirttags': return TSHIRTTAGS_FIELDS;
         case 'usermedals': return USERMEDAL_FIELDS;
         case 'users': return USER_FIELDS;
+        case 'orders': return ORDER_FIELDS;
+        case 'ordertshirts': return ORDERTSHIRT_FIELDS;
     }
 }
 
@@ -133,7 +134,7 @@ var checkFieldType = function (table) {
 // 	console.error(error);
 // });
 
-// insertEntity('comments',  {'userID': 2, 'tshirtID': 3, 'text': 'Майка как майка!'}).then(result => {
+// insertEntity('orders',  { 'userID': 1, 'address': 'j', 'phone': '8' }).then(result => {
 //     console.log(result);
 // }).catch(error => {
 //     console.error(error);

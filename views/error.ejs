@@ -8,11 +8,11 @@
 	<link rel="stylesheet" type="text/css" href="/public/css/errorstyle.css">
 </head>
 <body>
-	<h1>Упс... Что-то пошло не так...</h1>
+	<h1><%= myLocalize.translate("Упс... Что-то пошло не так...")%></h1>
 	<h2>"<%= error %>"</h2>
 	<p>
-		Попытайтесь позже... <br />
-		<a href="/">На Главную</a>
+		<%= myLocalize.translate("Попытайтесь позже...")%> <br />
+		<a href="/"><%= myLocalize.translate("Главная")%></a>
 	</p>
 	
 	<img class="error-cat" src="/public/img/erroeCat.png">

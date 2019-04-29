@@ -1,6 +1,21 @@
 body {
-	background-color: #f8f4ff;
-	color: text;
+	background-color: #151719;
+	color: #cfd1cd;
+}
+
+.modal-body, .modal-footer {
+    background-color: #151719;
+}
+
+.mimi {
+    background-color: #151719 !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+nav {
+    margin: 0px !important;
+    padding: 0px !important;
 }
 
 .logo {
@@ -30,8 +45,8 @@ body {
 .form-inline ul li{
     margin: auto;
     width: 100%;
-    border-left: 1px solid #cfd1cd;
-    border-right: 1px solid #cfd1cd;
+    border-left: 1px solid #151719;
+    border-right: 1px solid #151719;
     text-align: center;
 }
 
@@ -50,7 +65,7 @@ body {
 
 .form-inline ul {
     width: 100%;
-    border: 1px solid #cfd1cd;
+    border: 1px solid #fff;
     border-radius: 5px;
 }
 
@@ -125,6 +140,7 @@ main {
     width: 5%;
 }
 
+
 .user-data-form {
     width: 40%;
     margin: auto;
@@ -154,7 +170,7 @@ main {
     display: block;
     width: 25px;
     height: 25px;
-    opacity: 0.7;
+    opacity: 0.3;
     background: url(http://pngimg.com/uploads/star/star_PNG41441.png) no-repeat 50% 0;
     background-size: cover;
     cursor: pointer;
@@ -166,7 +182,7 @@ main {
 }
 
 .rating_block-static input[type="radio"]:checked ~ .label_rating {
-    opacity: 0.7 !important;
+    opacity: 0.3 !important;
 }
 
 /*.rating_block-static input[type="radio"]:checked Правило для всех следующих лейблов после выбранного инпута, чтобы звездочки как бы зафиксировались
@@ -247,6 +263,14 @@ main {
 
 .nav-item a:hover {
     color: #ffffff !important;
+}
+
+.table {
+    border-color: #ffffff;
+}
+
+.table tbody tr{
+    background-color: #cfd1cd;
 }
 
 

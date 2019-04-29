@@ -2,14 +2,14 @@
 <main>
 	
 	<form class="auth-form" method="post" action="/verify">
-	  <legend class="text-danger font-weight-bold legend">На вашу почту было отправлено письмо. Пройдите, пожалуйсто верификацию по электронной почте</legend>
+	  <legend class="text-danger font-weight-bold legend"><%= myLocalize.translate("На вашу почту было отправлено письмо. Пройдите, пожалуйсто верификацию по электронной почте")%></legend>
 	  <div class="form-group">
-	    <label for="newquery">Мне не пришло письмо:</label> <br />
-	  	<button name="button" value="newquery" type="submit" class="btn btn-primary form-control">Отправить занаво</button>
+	    <label for="newquery"><%= myLocalize.translate("Мне не пришло письмо")%>:</label> <br />
+	  	<button name="button" value="newquery" type="submit" class="btn btn-primary form-control"><%= myLocalize.translate("Отправить занаво")%></button>
 	  </div>
 	  <div class="form-group">
-	    <label for="remove">Я ввёл не свой email:</label> <br />
-	  	<button name="button" value="remove" type="submit" class="btn btn-primary form-control">Удалить акаунт</button>
+	    <label for="remove"><%= myLocalize.translate("Я ввёл не свой email")%>:</label> <br />
+	  	<button name="button" value="remove" type="submit" class="btn btn-primary form-control"><%= myLocalize.translate("Удалить акаунт")%></button>
 	  </div>
 	</form>
 

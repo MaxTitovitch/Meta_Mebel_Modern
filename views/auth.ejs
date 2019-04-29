@@ -4,50 +4,50 @@
 
 		<form class="auth-form" method="post" action="/auth">
 		  <div class="form-group">
-		    <label for="email">Почта:</label>
-		    <input name="email" type="email" class="form-control" placeholder="Логин" required="true">
+		    <label for="email"><%= myLocalize.translate("Почта")%>:</label>
+		    <input name="email" type="email" class="form-control" placeholder="<%= myLocalize.translate("Почта")%>" required="true">
 		  </div>
 		  <div class="form-group">
-		    <label for="password">Пароль:</label>
-		    <input name="password" type="password" class="form-control" placeholder="Пароль" required="true">
+		    <label for="password"><%= myLocalize.translate("Пароль")%>:</label>
+		    <input name="password" type="password" class="form-control" placeholder="<%= myLocalize.translate("Пароль")%>" required="true">
 		  </div>
-		  <button type="submit" class="btn btn-primary form-control">Войти</button>
+		  <button type="submit" class="btn btn-primary form-control"><%= myLocalize.translate("Войти")%></button>
 		</form>
 
 	<% } else { %>
 
 		<form class="auth-form" method="post" action="/registry">
 		  <div class="form-group">
-		    <label for="email">Почта:</label>
-		    <input name="email" id="email" type="email" class="form-control" placeholder="Почта" required="true">
+		    <label for="email"><%= myLocalize.translate("Почта")%>:</label>
+		    <input name="email" id="email" type="email" class="form-control" placeholder="<%= myLocalize.translate("Почта")%>" required="true">
 		  </div>
 		  <div class="form-group">
-		    <label for="password">Пароль:</label>
-		    <input name="password" id="password" type="password" class="form-control" placeholder="Пароль" required="true">
+		    <label for="password"><%= myLocalize.translate("Пароль")%>:</label>
+		    <input name="password" id="password" type="password" class="form-control" placeholder="<%= myLocalize.translate("Пароль")%>" required="true">
 		  </div>
 		  <div class="form-group">
-		    <label for="fullName">ФИО:</label>
-		    <input name="fullName" id="fullName" type="text" class="form-control" placeholder="ФИО" required="true">
+		    <label for="fullName"><%= myLocalize.translate("ФИО")%>:</label>
+		    <input name="fullName" id="fullName" type="text" class="form-control" placeholder="<%= myLocalize.translate("ФИО")%>" required="true">
 		  </div>
 		  <div class="form-group">
-		    <label for="date">Дата Рождения:</label>
+		    <label for="date"><%= myLocalize.translate("Дата Рождения")%>:</label>
 		    <input name="date" id="date" type="date" class="form-control" required="true" min="1920-01-01" max="2015-01-01">
 		  </div>
 
 		  <fieldset class="form-group">
 		    <div class="row">
-		      <legend class="col-form-label col-sm-2 pt-0">Язык:</legend>
+		      <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Язык")%>:</legend>
 		      <div class="col-sm-10">
 		        <div class="form-check">
 		          <input class="form-check-input" type="radio" name="language" id="gridRadios1" value="RU" checked>
 		          <label class="form-check-label" for="gridRadios1">
-		            Русский
+		            <%= myLocalize.translate("Русский")%>
 		          </label>
 		        </div>
 		        <div class="form-check">
 		          <input class="form-check-input" type="radio" name="language" id="gridRadios2" value="EN">
 		          <label class="form-check-label" for="gridRadios2">
-		            Английский
+		            <%= myLocalize.translate("Английский")%>
 		          </label>
 		        </div>
 		      </div>
@@ -56,25 +56,25 @@
 
 		  <fieldset class="form-group">
 		    <div class="row">
-		      <legend class="col-form-label col-sm-2 pt-0">Тема:</legend>
+		      <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Тема")%>:</legend>
 		      <div class="col-sm-10">
 		        <div class="form-check">
 		          <input class="form-check-input" type="radio" name="theme" id="gridRadios3" value="WHITE" checked>
 		          <label class="form-check-label" for="gridRadios3">
-		            Светлая
+		            <%= myLocalize.translate("Светлая")%>
 		          </label>
 		        </div>
 		        <div class="form-check">
 		          <input class="form-check-input" type="radio" name="theme" id="gridRadios4" value="BLACK">
 		          <label class="form-check-label" for="gridRadios4">
-		            Темная
+		            <%= myLocalize.translate("Темная")%>
 		          </label>
 		        </div>
 		      </div>
 		    </div>
 		  </fieldset>
 
-		  <button type="submit" class="btn btn-primary form-control">Регистрация</button>
+		  <button type="submit" class="btn btn-primary form-control"><%= myLocalize.translate("Регистрация")%></button>
 		</form>
 
 	<% } %>

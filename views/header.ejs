@@ -15,7 +15,11 @@
 
     <!-- Стили -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+    <% if (user != null) { -%> 
+      <link rel="stylesheet" type="text/css" href="/public/css/<%= user.theme == 'BLACK' ? 'dark-' : '' %>style.css">
+    <% } else { -%>
+      <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+    <% } -%>
 </head>
 <body>
     <header>
@@ -30,39 +34,40 @@
             </div>
             <% if(user == null) { %>
               <div class="auth-space">
-                  <a href="/auth">Вход</a> | <a href="/auth?reg=true">Регистрация</a>
+                  <a href="/auth"><%= myLocalize.translate("Вход")%></a> | <a href="/auth?reg=true"><%= myLocalize.translate("Регистрация")%></a>
               </div>
             <% } else { %>
               <div class="auth-space">
-                  <a href="/users/<%= user.id %>"><%= user.fullName %></a> | <a href="/logout">Выйти</a>
+                  <a href="/users/<%= user.id %>"><%= user.fullName %></a> | <a href="/logout"><%= myLocalize.translate("Выйти")%></a>
               </div>
             <% } %>
         </nav>
-
+        <div class="mimi">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <form class="form-inline my-2 my-lg-0" action="/search">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item">
-                    <a class="nav-link" href="/">Главная</a>
+                    <a class="nav-link" href="/"><%= myLocalize.translate("Главная")%></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/payment">Оплата и доставка</a>
+                    <a class="nav-link" href="/payment"><%= myLocalize.translate("Оплата и доставка")%></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/pickup">Самовывоз</a>
+                    <a class="nav-link" href="/pickup"><%= myLocalize.translate("Самовывоз")%></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/about">О нас</a>
+                    <a class="nav-link" href="/about"><%= myLocalize.translate("О нас")%></a>
                   </li>
                   <li>
                     <input class="form-control" type="search" placeholder="Поиск" aria-label="Поиск"> 
-                    <button id="search" class="btn btn-outline-success" type="submit">Поиск</button>
+                    <button id="search" class="btn btn-primary" type="submit"><%= myLocalize.translate("Поиск")%></button>
                   </li>
                 </ul>
             </form>
           </div>
         </nav>
+      </div>
 
     </header>

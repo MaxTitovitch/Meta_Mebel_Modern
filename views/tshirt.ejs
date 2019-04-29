@@ -1,228 +1,202 @@
 <%- include('header'); -%>
 <main>
 
-	<div class="container">
-		<h2><%= tshirt.name %></h2>
-		<div class="rating_block-static">
-		  <label for="rating_11" class="label_rating"></label>
-		  <input name="avg-rating" value="1" id="rating_11" type="radio"  disabled="true" <%= tshirt.ranking <= 1 ? 'checked="checked"': '' %>/>
+  <div class="container">
+    <h2><%= tshirt.name %></h2>
+    <div class="rating_block-static">
+      <label for="rating_11" class="label_rating"></label>
+      <input name="avg-rating" value="1" id="rating_11" type="radio"  disabled="true" <%= tshirt.ranking <= 1 ? 'checked="checked"': '' %>/>
 
-		  <label for="rating_21" class="label_rating"></label>
-		  <input name="avg-rating" value="2" id="rating_21" type="radio"  disabled="true"  <%= tshirt.ranking > 1 && tshirt.ranking <= 2 ? 'checked="checked"': '' %> />
+      <label for="rating_21" class="label_rating"></label>
+      <input name="avg-rating" value="2" id="rating_21" type="radio"  disabled="true"  <%= tshirt.ranking > 1 && tshirt.ranking <= 2 ? 'checked="checked"': '' %> />
 
-		  <label for="rating_31" class="label_rating"></label>
-		  <input name="avg-rating" value="3" id="rating_31" type="radio"  disabled="true" <%= tshirt.ranking > 2 && tshirt.ranking <= 3 ? 'checked="checked"': '' %> />
+      <label for="rating_31" class="label_rating"></label>
+      <input name="avg-rating" value="3" id="rating_31" type="radio"  disabled="true" <%= tshirt.ranking > 2 && tshirt.ranking <= 3 ? 'checked="checked"': '' %> />
 
-		  <label for="rating_41" class="label_rating"></label>
-		  <input name="avg-rating" value="4" id="rating_41" type="radio"  disabled="true" <%= tshirt.ranking > 3 && tshirt.ranking <= 4 ? 'checked="checked"': '' %> />
+      <label for="rating_41" class="label_rating"></label>
+      <input name="avg-rating" value="4" id="rating_41" type="radio"  disabled="true" <%= tshirt.ranking > 3 && tshirt.ranking <= 4 ? 'checked="checked"': '' %> />
 
-		  <label for="rating_51" class="label_rating"></label>
-		  <input name="avg-rating" value="5" id="rating_51" type="radio" disabled="true" <%= tshirt.ranking > 4 && tshirt.ranking <= 5? 'checked="checked"': '' %> />
+      <label for="rating_51" class="label_rating"></label>
+      <input name="avg-rating" value="5" id="rating_51" type="radio" disabled="true" <%= tshirt.ranking > 4 && tshirt.ranking <= 5? 'checked="checked"': '' %> />
 
-		</div>
-		<div class="main main-tags">
-			<% for (var i = 0; i < tags.length; i++) { -%>
-        		<a href="/search?value=<%= tags[i].tagName%>" class="badge badge-pill badge-dark"><%= tags[i].tagName%></a>
-			<% } -%>
-		</div>
-		<div class="row">
-			<div class="col-md-6">
-				<img src="/public/img/test.jpg" class="big-photo" />
-			</div>
-			<div class="col-md-6">
-				<h3><%= tshirt.name %></h3>
-				<p><%= tshirt.shortText %></p>
-				<span class="text-primary"><%= tshirt.price %> руб.</span>
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-				  Купить
-				</button>
-			</div>	
-		</div>
-		<% if(rankings == undefined) rankings = {value: undefined} %>
+    </div>
+    <div class="main main-tags">
+      <% for (var i = 0; i < tags.length; i++) { -%>
+            <a href="/search?value=<%= tags[i].tagName%>" class="badge badge-pill badge-dark"><%= tags[i].tagName%></a>
+      <% } -%>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <img src="/public/img/test.jpg" class="big-photo" />
+      </div>
+      <div class="col-md-6">
+        <h3><%= tshirt.name %></h3>
+        <p><%= tshirt.shortText %></p>
+        <span class="text-primary"><%= tshirt.price %> <%= myLocalize.translate("руб")%>.</span>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          <%= myLocalize.translate("Купить")%>
+        </button>
+      </div>  
+    </div>
+    <% if(rankings == undefined) rankings = {value: undefined} %>
 
-		<a href="/users/<%= tshirt.userID %>"><%= tshirt.fullName %></a>
+    <a href="/users/<%= tshirt.userID %>"><%= tshirt.fullName %></a>
+    <% for (var i = 0; i < medals.length; i++) { -%>
+        <img src="/public/img/medals/<%= medals[i].imageAddress%>" class="little-medal" title="<%= medals[i].shortText%>" />
+    <% } -%>
 
-		<div class="rating_block">
-		  <input name="rating" value="5" id="rating_5" type="radio"  <%= rankings.value > 4 && tshirt.ranking <= 5 ? 'checked="checked"': '' %>/>
-		  <label for="rating_5" class="label_rating"></label>
+    <div id="user_ranking" class="rating_block">
+      <input name="rating" value="5" id="rating_5" type="radio"  <%= rankings.value > 4 && tshirt.ranking <= 5 ? 'checked="checked"': '' %>/>
+      <label for="rating_5" class="label_rating"></label>
 
-		  <input name="rating" value="4" id="rating_4" type="radio"  <%= rankings.value > 3 && rankings.value <= 4 ? 'checked="checked"': '' %>/>
-		  <label for="rating_4" class="label_rating"></label>
+      <input name="rating" value="4" id="rating_4" type="radio"  <%= rankings.value > 3 && rankings.value <= 4 ? 'checked="checked"': '' %>/>
+      <label for="rating_4" class="label_rating"></label>
 
-		  <input name="rating" value="3" id="rating_3" type="radio" <%= rankings.value > 2 && rankings.value <= 3 ? 'checked="checked"': '' %>/>
-		  <label for="rating_3" class="label_rating"></label>
+      <input name="rating" value="3" id="rating_3" type="radio" <%= rankings.value > 2 && rankings.value <= 3 ? 'checked="checked"': '' %>/>
+      <label for="rating_3" class="label_rating"></label>
 
-		  <input name="rating" value="2" id="rating_2" type="radio" <%= rankings.value > 1 && rankings.value <= 2 ? 'checked="checked"': '' %>/>
-		  <label for="rating_2" class="label_rating"></label>
+      <input name="rating" value="2" id="rating_2" type="radio" <%= rankings.value > 1 && rankings.value <= 2 ? 'checked="checked"': '' %>/>
+      <label for="rating_2" class="label_rating"></label>
 
-		  <input name="rating" value="1" id="rating_1" type="radio" <%= rankings.value <= 1 ? 'checked="checked"': '' %>/>
-		  <label for="rating_1" class="label_rating"></label>
-		</div>
-		<div class="buttons-tshirt">
-			<a id="copy-tshirt" class="btn btn-primary" href="/edit_tshirt/0?from=<%= tshirt.id %>">Копировать</a>
-			<% if (user.role == 1 || user.id == tshirt.userID) { -%>
-				<a id="update-this-tshirt" class="btn btn-primary" href="/edit_tshirt/<%= tshirt.id %>/<%= user.id == tshirt.userID ? '' : '?for=admin' %>">Редактировать</a>
-				<button id="delete-this-tshirt" class="btn btn-primary" type="submit">Удалить</button>
-			<% } -%>
-		</div>
-		
-		<br />
-		<h2>Коментарии: </h2>
-		<div class="comment-zone">
-			<div class="comment">
-				<div class="likes">
-				  <div class="form-group">
-					<input id="new-comment" type="text" class="form-control" placeholder="Коментарий" required="true" /> 
-				  </div>
-				  <button id="add-comment" class="form-control btn btn-primary" type="submit">Добавить</button>
-				</div>
-			</div>
-			<% for (var i = 0; i < comments.length; i++) { -%>
-				<div class="comment">
-					<a href="<%= comments[i].userID %>"><%= comments[i].fullName %></a>
-					<p class="text-simple"><%= comments[i].text %></p>
-					<p class="text-primary left-float"><%= comments[i].date.toISO() %></p>
-					<div class="likes">
-						<%= comments[i].quantity %>
-						<img src="https://cdn.icon-icons.com/icons2/1283/PNG/512/1497619993-jd04_85160.png" width="30px" class="liked"/>
-					</div>
-				</div>
-			<% } -%>
-		</div>
-	</div>
+      <input name="rating" value="1" id="rating_1" type="radio" <%= rankings.value <= 1 ? 'checked="checked"': '' %>/>
+      <label for="rating_1" class="label_rating"></label>
+    </div>
+    <div class="buttons-tshirt">
+      <a id="copy-tshirt" class="btn btn-primary" href="/edit_tshirt/0?from=<%= tshirt.id %>"><%= myLocalize.translate("Копировать")%></a>
+      <% if (user.role == 1 || user.id == tshirt.userID) { -%>
+        <a id="update-this-tshirt" class="btn btn-primary" href="/edit_tshirt/<%= tshirt.id %>/<%= user.id == tshirt.userID ? '' : '?for=admin' %>"><%= myLocalize.translate("Редактировать")%></a>
+        <button id="delete-this-tshirt" class="btn btn-primary" type="submit"><%= myLocalize.translate("Удалить")%></button>
+        <a id="download-this-tshirt" class="btn btn-primary" type="submit" href="/download/<%= tshirt.id %>"><%= myLocalize.translate("Скачать")%></a>
+      <% } -%>
+    </div>
+    
+    <br />
+    <h2><%= myLocalize.translate("Коментарии")%>: </h2>
+    <div class="comment-zone">
+      <div class="comment">
+        <div class="likes">
+          <div class="form-group">
+          <input id="new-comment" type="text" class="form-control" placeholder="<%= myLocalize.translate("Коментарий")%>" required="true" /> 
+          </div>
+          <button id="add-comment" class="form-control btn btn-primary" type="submit"><%= myLocalize.translate("Добавить")%></button>
+        </div>
+      </div>
+      <% for (var i = 0; i < comments.length; i++) { -%>
+        <div class="comment">
+          <a href="<%= comments[i].userID %>"><%= comments[i].fullName %></a>
+          <p class="text-simple"><%= comments[i].text %></p>
+          <p class="text-primary left-float"><%= comments[i].date.toISO() %></p>
+          <div class="likes">
+            <%= comments[i].quantity %>
+            <img src="https://cdn.icon-icons.com/icons2/1283/PNG/512/1497619993-jd04_85160.png" width="30px" class="liked"/>
+          </div>
+        </div>
+      <% } -%>
+    </div>
+  </div>
 
-	<!-- Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Покупка товара</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	      	  <fieldset class="form-group">
-			    <div class="row">
-			      <legend class="col-form-label col-sm-2 pt-0">Способ получения:</legend>
-			      <div class="col-sm-10">
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="getType" id="gridRadios1" value="Доставка" checked>
-			          <label class="form-check-label" for="gridRadios1">
-			            Доставка
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="getType" id="gridRadios2" value="Самовывоз">
-			          <label class="form-check-label" for="gridRadios2">
-			            Самовывоз
-			          </label>
-			        </div>
-			      </div>
-			    </div>
-			  </fieldset>
-    		  <div class="form-group">
-			    <label for="address">Адрес доставки: </label>
-			    <input name="address" id="address" type="text" class="form-control" placeholder="Адрес" required="true">
-			  </div>
-			  <div class="form-group">
-			    <label for="address">Телефон:</label>
-			    <input name="address" id="address" type="text" class="form-control" placeholder="Телефон" required="true">
-			  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><%= myLocalize.translate("Покупка товара")%></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <fieldset class="form-group">
+          <div id="delivery-type" class="row">
+            <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Способ получения")%>:</legend>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="getType" id="gridRadios1" value="deliv" checked>
+                <label class="form-check-label" for="gridRadios1">
+                  <%= myLocalize.translate("Доставка")%>
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="getType" id="gridRadios2" value="pic">
+                <label class="form-check-label" for="gridRadios2">
+                  <%= myLocalize.translate("Самовывоз")%>
+                </label>
+              </div>
+            </div>
+          </div>
 
-	      	  <fieldset class="form-group">
-			    <div class="row">
-			      <legend class="col-form-label col-sm-2 pt-0">Пол:</legend>
-			      <div class="col-sm-10">
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="gender" id="gridRadios3" value="Мужская" checked>
-			          <label class="form-check-label" for="gridRadios3">
-			            Мужская
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="gender" id="gridRadios4" value="Женская">
-			          <label class="form-check-label" for="gridRadios4">
-			            Женская
-			          </label>
-			        </div>
-			      </div>
-			    </div>
-			  </fieldset>
+        </fieldset>
+          <div class="form-group">
+          <label for="user-address"><%= myLocalize.translate("Адрес доставки")%>: </label>
+          <input name="user-address" id="user-address" type="text" class="form-control" placeholder="<%= myLocalize.translate("Адрес доставки")%>" required="true">
+        </div>
+        <div class="form-group">
+          <label for="user-phone"><%= myLocalize.translate("Телефон")%>:</label>
+          <input name="user-phone" id="user-phone" type="text" class="form-control" placeholder="<%= myLocalize.translate("Телефон")%>" required="true">
+        </div>
 
-	      	  <fieldset class="form-group">
-			    <div class="row">
-			      <legend class="col-form-label col-sm-2 pt-0">Размер:</legend>
-			      <div class="col-sm-10">
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="size" id="gridRadios5" value="S" checked>
-			          <label class="form-check-label" for="gridRadios5">
-			            S
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="size" id="gridRadios6" value="X">
-			          <label class="form-check-label" for="gridRadios6">
-			            X
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="size" id="gridRadios7" value="L">
-			          <label class="form-check-label" for="gridRadios7">
-			            L
-			          </label>
-			        </div>
-			      </div>
-			    </div>
-			  </fieldset>
+        <input id="user-index" type="hidden" required="true" value="<%= user.id%>">
 
-			  <fieldset class="form-group">
-			    <div class="row">
-			      <legend class="col-form-label col-sm-2 pt-0">Цвет:</legend>
-			      <div class="col-sm-10">
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="color" id="gridRadios8" value="Белый" checked>
-			          <label class="form-check-label" for="gridRadios8">
-			            Белый
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="color" id="gridRadios9" value="Чёрный">
-			          <label class="form-check-label" for="gridRadios9">
-			          	Чёрный
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="color" id="gridRadios10" value="Красный">
-			          <label class="form-check-label" for="gridRadios10">
-			            Красный
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="color" id="gridRadios11" value="Зелёный">
-			          <label class="form-check-label" for="gridRadios11">
-			            Зелёный
-			          </label>
-			        </div>
-			        <div class="form-check">
-			          <input class="form-check-input" type="radio" name="color" id="gridRadios12" value="Синий">
-			          <label class="form-check-label" for="gridRadios12">
-			            Синий
-			          </label>
-			        </div>
-			      </div>
-			    </div>
-			  </fieldset>
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Пол")%>:</legend>
+            <div id="payed-gender" class="col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="gridRadios3" value="Мужская" checked>
+                <label class="form-check-label" for="gridRadios3">
+                  <%= myLocalize.translate("Мужской")%>
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gender" id="gridRadios4" value="Женская">
+                <label class="form-check-label" for="gridRadios4">
+                  <%= myLocalize.translate("Женский")%>
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
 
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-	        <button id="add-in-basket" type="button" class="btn btn-primary">В корзину</button>
-	        <button id="pay-tshirt" type="button" class="btn btn-primary">Купить</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Размер")%>:</legend>
+            <div id="payed-size" class="col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="size" id="gridRadios5" value="S" checked>
+                <label class="form-check-label" for="gridRadios5">
+                  S
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="size" id="gridRadios6" value="X">
+                <label class="form-check-label" for="gridRadios6">
+                  X
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="size" id="gridRadios7" value="L">
+                <label class="form-check-label" for="gridRadios7">
+                  L
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-group">
+          <label for="added-color"><%= myLocalize.translate("Цвет")%>:</label>
+          <input name="added-color" id="payed-color" type="color" class="form-control" placeholder="Цвет" required="true" />
+        </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= myLocalize.translate("Отмена")%></button>
+          <button id="add-in-basket" type="button" class="btn btn-primary"><%= myLocalize.translate("В корзину")%></button>
+          <button id="pay-tshirt" type="button" class="btn btn-primary"><%= myLocalize.translate("Купить")%></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </main> 
 <%- include('footer'); -%>

@@ -1,112 +1,107 @@
 <%- include('header'); -%>
-<main>	
+<main>  
 
-	<form class="auth-form" method="post" action="/registry">
-		<h3>Конструктор: </h3>
-	  <div class="form-group">
-	    <label for="name">Название:</label>
-	    <input name="name" id="name" type="text" class="form-control" placeholder="Название" required="true" value="<%= tshirt != undefined ? tshirt.name : '' %>">
-	  </div>
-	  <div class="form-group">
-	    <label for="password">Описание:</label>
-	    <textarea name="password" id="password" class="form-control" placeholder="Описание" required="true"><%= tshirt != undefined ? tshirt.shortText : '' %></textarea>
-	  </div>
-	  <div class="form-group">
-	    <label for="price">Цена:</label>
-	    <input name="price" id="price" type="number" class="form-control" placeholder="Цена" required="true" min="1" max="10000"  value="<%= tshirt != undefined ? tshirt.price : '' %>">
-	  </div>
+    <form class="auth-form" method="post" action="/registry">
+        <h3><%= myLocalize.translate("Конструктор")%>: </h3>
+      <div class="form-group">
+        <label for="name"><%= myLocalize.translate("Название")%>:</label>
+        <input name="name" id="name" type="text" class="form-control" placeholder="<%= myLocalize.translate("Название")%>" required="true" value="<%= tshirt != undefined ? tshirt.name : '' %>">
+      </div>
+      <div class="form-group">
+        <label for="password"><%= myLocalize.translate("Описание")%>:</label>
+        <textarea name="password" id="password" class="form-control" placeholder="<%= myLocalize.translate("Описание")%>" required="true"><%= tshirt != undefined ? tshirt.shortText : '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label for="price"><%= myLocalize.translate("Цена")%>:</label>
+        <input name="price" id="price" type="number" class="form-control" placeholder="<%= myLocalize.translate("Цена")%>" required="true" min="1" max="10000"  value="<%= tshirt != undefined ? tshirt.price : '' %>">
+      </div>
+       <div class="form-group">
+        <label for="color"><%= myLocalize.translate("Цвет")%>:</label>
+        <input name="color" id="color" type="color" class="form-control" required="true" value="<%= tshirt != undefined ? tshirt.color : '' %>">
+      </div>
 
-	  <fieldset class="form-group">
-	    <div class="row">
-	      <legend class="col-form-label col-sm-2 pt-0">Пол:</legend>
-	      <div class="col-sm-10">
-	        <div class="form-check">
-	          <input class="form-check-input" type="radio" name="gender" id="gridRadios1" value="RU" checked>
-	          <label class="form-check-label" for="gridRadios1">
-	            Мужской
-	          </label>
-	        </div>
-	        <div class="form-check">
-	          <input class="form-check-input" type="radio" name="gender" id="gridRadios2" value="EN">
-	          <label class="form-check-label" for="gridRadios2">
-	            Женский
-	          </label>
-	        </div>
-	      </div>
-	    </div>
-	  </fieldset>
+      <fieldset class="form-group">
+        <div class="row">
+          <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Пол")%>:</legend>
+          <div class="col-sm-10">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="gridRadios1" value="RU" checked>
+              <label class="form-check-label" for="gridRadios1">
+                <%= myLocalize.translate("Мужской")%>
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gender" id="gridRadios2" value="EN">
+              <label class="form-check-label" for="gridRadios2">
+                <%= myLocalize.translate("Женский")%>
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
 
-	  <div class="form-group">
-	  	<button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#exampleModal">
-				  Добавить текст
-			</button>
-		</div>
-	  <div class="form-group">
-		  <button type="submit" class="btn btn-primary form-control" disabled="disabled" >Добавьте картинку: Drag-N-Drop</button>
-		</div>
-	</form>
-	<div class="img-container">
-		<img src="/public/img/tsm.png" class="edited-img men-img" >
-		<!-- <p><-%= //tshirt != undefined ? tshirt.html : '' %></p> -->
-		<!-- <img src="/public/img/tsf.png" class="edited-img women-img"> -->
-	</div>
+      <div class="form-group">
+        <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#exampleModal">
+            <%= myLocalize.translate("Добавить текст")%>
+        </button>
+        </div>
+      <div class="form-group">
+          <button type="submit" class="btn btn-primary form-control" disabled="disabled" ><%= myLocalize.translate("Добавьте картинку")%>: Drag-N-Drop</button>
+        </div>
+    </form>
+    <div class="img-container">
+        <img src="/public/img/tsm.png" class="edited-img men-img" >
+        <!-- <p><-%= //tshirt != undefined ? tshirt.html : '' %></p> -->
+        <!-- <img src="/public/img/tsf.png" class="edited-img women-img"> -->
+    </div>
 
-	<div class="container">
-			<div class="main main-tags">
-		<% for (var i = 0; i < thisTags.length; i++) { -%>
-      		<a href="/search?value=<%= tags[i].tagName%>" class="badge badge-pill badge-dark"><%= thisTags[i].tagName%></a>
-		<% } -%>
-		<input name="new-tag" id="name" type="text" class="form-control add-tag-space" placeholder="Новый тег" required="true" />
-	</div>	
+    <div class="container">
+        <div class="main main-tags">
+            <% for (var i = 0; i < thisTags.length; i++) { -%>
+                <a href="/search?value=<%= tags[i].tagName%>" class="badge badge-pill badge-dark"><%= thisTags[i].tagName%></a>
+            <% } -%>
+            <input name="new-tag" id="new-tag" type="text" class="form-control add-tag-space" placeholder="<%= myLocalize.translate("Новый тег")%>" required="true" />
+        </div>  
 
-  <div class="form-group">
-	  <button type="submit" class="btn btn-primary form-control">Сохранить</button>
-	</div>
-	</div>
+      <div class="form-group">
+          <button type="submit" class="btn btn-primary form-control"><%= myLocalize.translate("Сохранить")%></button>
+    </div>
+    </div>
 
 
 <!-- Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Добавить текст</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><%= myLocalize.translate("Добавить текст")%></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
 
-    	  <div class="form-group">
-			    <label for="added-text">Текст:</label>
-			    <input name="added-text" id="added-text" type="text" class="form-control" placeholder="Текст" required="true">
-			  </div>
-    	  <div class="form-group">
-			    <label for="added-size">Размер:</label>
-			    <input name="added-size" id="added-size" type="text" class="form-control" placeholder="Размер" required="true" value="14">
-			  </div>
-			  <div class="form-group">
-			    <label for="added-color">Цвет:</label>
-			    <input name="added-color" id="added-color" type="color" class="form-control" placeholder="Цвет" required="true" />
-			  </div>
+          <div class="form-group">
+                <label for="added-text"><%= myLocalize.translate("Текст")%>:</label>
+                <input name="added-text" id="added-text" type="text" class="form-control" placeholder="Текст" required="true">
+              </div>
+          <div class="form-group">
+                <label for="added-size"><%= myLocalize.translate("Размер")%>:</label>
+                <input name="added-size" id="added-size" type="text" class="form-control" placeholder="Размер" required="true" value="14">
+              </div>
+          <div class="form-group">
+            <label for="added-color"><%= myLocalize.translate("Цвет")%>:</label>
+            <input name="added-color" id="added-color" type="color" class="form-control" placeholder="Цвет" required="true" />
+          </div>
 
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-	        <button type="button" class="btn btn-primary">Добавить</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
-
-
-
-
-
-
-
-
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= myLocalize.translate("Отмена")%></button>
+            <button type="button" class="btn btn-primary"><%= myLocalize.translate("Добавить")%></button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 

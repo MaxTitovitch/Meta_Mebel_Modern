@@ -2,24 +2,24 @@
 <main>
 
   <% if(user.role == 1 || user.id == thisUser.id) { %>
-    <h2 class="font-weight-bold">ЛИЧНЫЙ КАБИНЕТ: <%= user.fullName %></h2>
+    <h2 class="font-weight-bold"><%= myLocalize.translate("ЛИЧНЫЙ КАБИНЕТ")%>: <%= user.fullName %></h2>
 
     <form class="user-data-form">
-    <h3>Стилизация</h3>
+    <h3><%= myLocalize.translate("Стилизация")%></h3>
       <fieldset class="form-group">
         <div class="row">
-          <legend class="col-form-label col-sm-2 pt-0">Язык:</legend>
+          <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Язык")%>:</legend>
           <div id="language" class="col-sm-10">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="language" id="gridRadios1" value="RU" <%= user.language == 'RU' ? 'checked' : ''%>>
               <label class="form-check-label" for="gridRadios1">
-                Русский
+                <%= myLocalize.translate("Русский")%>
               </label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="radio" name="language" id="gridRadios2" value="EN" <%= user.language == 'EN' ? 'checked' : ''%>>
               <label class="form-check-label" for="gridRadios2">
-                Английский
+                <%= myLocalize.translate("Английский")%>
               </label>
             </div>
           </div>
@@ -28,18 +28,18 @@
 
       <fieldset class="form-group">
         <div class="row">
-          <legend class="col-form-label col-sm-2 pt-0">Тема:</legend>
+          <legend class="col-form-label col-sm-2 pt-0"><%= myLocalize.translate("Тема")%>:</legend>
           <div id="theme" class="col-sm-10">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="theme" id="gridRadios3" value="WHITE" <%= user.theme == 'WHITE' ? 'checked' : ''%>>
               <label class="form-check-label" for="gridRadios3">
-                Светлая
+                <%= myLocalize.translate("Светлая")%>
               </label>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="radio" name="theme" id="gridRadios4" value="BLACK" <%= user.theme == 'BLACK' ? 'checked' : ''%>>
               <label class="form-check-label" for="gridRadios4">
-                Темная
+                <%= myLocalize.translate("Темная")%>
               </label>
             </div>
           </div>
@@ -48,37 +48,37 @@
     </form>
 
     <form class = 'user-data-form'>
-    <h3>Личные настройки: </h3>
+    <h3><%= myLocalize.translate("Личные настройки")%>: </h3>
       <div class="form-group">
-        <label for="email">Почта:</label>
-        <input name="email" id="email" type="email" class="form-control" placeholder="Почта" required="true" disabled="true" value="<%= user.email %>">
+        <label for="email"><%= myLocalize.translate("Почта")%>:</label>
+        <input name="email" id="email" type="email" class="form-control" placeholder="<%= myLocalize.translate("Почта")%>" required="true" disabled="true" value="<%= user.email %>">
       </div>
       <div class="form-group">
-        <label for="fullName">ФИО:</label>
-        <input name="fullName" id="fullName" type="text" class="form-control" placeholder="ФИО" required="true" value="<%= user.fullName %>">
+        <label for="fullName"><%= myLocalize.translate("ФИО")%>:</label>
+        <input name="fullName" id="fullName" type="text" class="form-control" placeholder="ФИО")%>" required="true" value="<%= user.fullName %>">
       </div>
       <div class="form-group">
-        <label for="date">Дата Рождения:</label>
+        <label for="date"><%= myLocalize.translate("Дата Рождения")%>:</label>
         <input name="date" id="date" type="date" class="form-control" required="true" min="1920-01-01" max="2015-01-01" value="<%= user.dateOfBirth.toISO() ,%>">
       </div>
       <div class="form-group">
-        <label for="password">Пароль:</label>
-        <input name="password" id="password" type="password" class="form-control" placeholder="Пароль" required="true"  value="<%= user.password %>"> 
+        <label for="password"><%= myLocalize.translate("Пароль")%>:</label>
+        <input name="password" id="password" type="password" class="form-control" placeholder="Пароль")%>" required="true"  value="<%= user.password %>"> 
       </div>
-      <button id="save-pass" class="form-control btn btn-primary" type="button">Сохранить ✔</button>
+      <button id="save-pass" class="form-control btn btn-primary" type="button"><%= myLocalize.translate("Сохранить")%></button>
     </form>
 
-    <h3>Медальки: </h3>
+    <h3><%= myLocalize.translate("Медальки")%>: </h3>
     <p>
       <% if (medals.length == 0) { -%>
-        Отсутствуют!
+        <%= myLocalize.translate("Отсутствуют")%>!
       <% } -%>
       <% for (var i = 0; i < medals.length; i++) { %>
         <img src="/public/img/medals/<%= medals[i].imageAddress%>" class="big-medal" title="<%= medals[i].shortText%>" />
       <% } %>
     </p>
 
-    <h3>Майки: </h3>
+    <h3><%= myLocalize.translate("Майки")%>: </h3>
     <div class="container">
       <div class="main main-best">
         <% tshirts.forEach(function(tshirt){ %>
@@ -93,22 +93,22 @@
             </a>
         <% }); %>
       </div>
-      <a id="create-tshirt" class="form-control btn btn-primary" href="/edit_tshirt/0<%= user.id == thisUser.id ? '' : '?for=admin' %>">Создать</a>
+      <a id="create-tshirt" class="form-control btn btn-primary" href="/edit_tshirt/0<%= user.id == thisUser.id ? '' : '?for=admin' %>"><%= myLocalize.translate("Создать")%></a>
     </div>
 
     <% if (user.role == 1) { -%>
       <div class="users-table container">
         <hr />
-        <h3>Управлене учётными записями: </h3>
+        <h3><%= myLocalize.translate("Управлене учётными записями")%>: </h3>
           <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th>id</th>
-                <th>ФИО</th>
-                <th>Почта</th>
-                <th>Пароль</th>
-                <th>Роль</th>
-                <th>Дата Рождения</th>
+                <th>ID</th>
+                <th><%= myLocalize.translate("ФИО")%></th>
+                <th><%= myLocalize.translate("Почта")%></th>
+                <th><%= myLocalize.translate("Пароль")%></th>
+                <th><%= myLocalize.translate("Роль")%></th>
+                <th><%= myLocalize.translate("Дата Рождения")%></th>
                 <th> </th>
               </tr>
             </thead>
@@ -122,35 +122,35 @@
                   <td><%= allUsers[i].role %></td>
                   <td><%= allUsers[i].dateOfBirth.toISO() %></td>
                   <td>
-                    <a class="remove-user" id="removeUserLink-<%= allUsers[i].id %>" href="#">Удалить</a> 
-                    <a class="update-user" id="updateUserLink-<%= allUsers[i].id %>" href="#">Изменить</a> 
+                    <a class="remove-user" id="removeUserLink-<%= allUsers[i].id %>" href="#"><%= myLocalize.translate("Удалить")%></a> 
+                    <a class="update-user" id="updateUserLink-<%= allUsers[i].id %>" href="#"><%= myLocalize.translate("Изменить")%></a> 
                   </td>
                 </tr>
               <% } -%>
             </tbody>
           </table>
-          <a class="create-user" id="createUserLink"  href="#">Создать</a> 
+          <a class="create-user" id="createUserLink"  href="#"><%= myLocalize.translate("Создать")%></a> 
       </div>
     <% } -%>
 
   <% } else { %>
-    <h3>Контактные данные: </h3>
+    <h3><%= myLocalize.translate("Контактные данные")%>: </h3>
     <form class = 'user-data-form'>
       <div class="form-group">
-        <label for="email">Почта:</label>
-        <input name="email" id="email" type="email" class="form-control" placeholder="Почта" required="true" disabled="true" value="<%= user.email %>">
+        <label for="email"><%= myLocalize.translate("Почта")%>:</label>
+        <input name="email" id="email" type="email" class="form-control" placeholder="<%= myLocalize.translate("Почта")%>" required="true" disabled="true" value="<%= user.email %>">
       </div>
       <div class="form-group">
-        <label for="fullName">ФИО:</label>
-        <input name="fullName" id="fullName" type="text" class="form-control" placeholder="ФИО" required="true" disabled="true" value="<%= user.fullName %>">
+        <label for="fullName"><%= myLocalize.translate("ФИО")%>:</label>
+        <input name="fullName" id="fullName" type="text" class="form-control" placeholder="<%= myLocalize.translate("ФИО")%>" required="true" disabled="true" value="<%= user.fullName %>">
       </div>
       <div class="form-group">
-        <label for="date">Дата Рождения:</label>
+        <label for="date"><%= myLocalize.translate("Дата Рождения")%>:</label>
           <input name="date" id="date" type="date" class="form-control" required="true" min="1920-01-01" max="2015-01-01" disabled="true"  value="<%= user.dateOfBirth.toISO() ,%>">
       </div>
     </form>
 
-    <h3>Майки: </h3>
+    <h3><%= myLocalize.translate("Майки")%>: </h3>
     <div class="container">
       <div class="main main-best">
         <% tshirts.forEach(function(tshirt){ %>
@@ -174,7 +174,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="updateUserModalLabel">Добавить\Изменить пользователя</h5>
+          <h5 class="modal-title" id="updateUserModalLabel"><%= myLocalize.translate("Добавить|Изменить пользователя")%></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -184,31 +184,31 @@
           <form class = 'user-data-form'>
             <input id="userIdSave" type="hidden" value="">
             <div class="form-group">
-              <label for="fullName1">ФИО:</label>
-              <input name="fullName1" id="fullName1" type="text" class="form-control" placeholder="ФИО" required="true" value="<%= user.email%>">
+              <label for="fullName1"><%= myLocalize.translate("ФИО")%>:</label>
+              <input name="fullName1" id="fullName1" type="text" class="form-control" placeholder="<%= myLocalize.translate("ФИО")%>" required="true" value="<%= user.email%>">
             </div>
             <div class="form-group">
-              <label for="role1">Роль:</label>
-              <input name="role1" id="role1" type="text" class="form-control" placeholder="Роль" required="true" value="<%= user.fullName %>">
+              <label for="role1"><%= myLocalize.translate("Роль")%>:</label>
+              <input name="role1" id="role1" type="text" class="form-control" placeholder="<%= myLocalize.translate("Роль")%>" required="true" value="<%= user.fullName %>">
             </div>
             <div class="form-group">
-              <label for="date1">Дата Рождения:</label>
+              <label for="date1"><%= myLocalize.translate("Дата Рождения")%>:</label>
               <input name="date1" id="date1" type="date" class="form-control" required="true" min="1920-01-01" max="2015-01-01" value="<%= user.dateOfBirth.toISO() ,%>">
             </div>
             <div class="form-group">
-              <label for="email1">Почта:</label>
-              <input name="email1" id="email1" type="email" class="form-control" placeholder="Почта" required="true"  value="<%= user.email %>"> 
+              <label for="email1"><%= myLocalize.translate("Почта")%>:</label>
+              <input name="email1" id="email1" type="email" class="form-control" placeholder="<%= myLocalize.translate("Почта")%>" required="true"  value="<%= user.email %>"> 
             </div>
             <div class="form-group">
-              <label for="password1">Пароль:</label>
-              <input name="password1" id="password1" type="password" class="form-control" placeholder="Пароль" required="true"  value="<%= user.password %>"> 
+              <label for="password1"><%= myLocalize.translate("Пароль")%>:</label>
+              <input name="password1" id="password1" type="password" class="form-control" placeholder="<%= myLocalize.translate("Пароль")%>" required="true"  value="<%= user.password %>"> 
             </div>
           </form>
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-          <button type="button" class="btn btn-primary" id="add-save-user">Добавить</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= myLocalize.translate("Отмена")%></button>
+          <button type="button" class="btn btn-primary" id="add-save-user"><%= myLocalize.translate("Добавить")%></button>
         </div>
       </div>
     </div>
