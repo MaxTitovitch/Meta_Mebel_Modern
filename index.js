@@ -453,6 +453,14 @@ app.post('/saveuser', urlencodedParser, function (req, res) {
     res.send( saveUser(req.body, 0));
 });
 
+app.get('/addForm/:index', urlencodedParser, function (req, res) {
+    mysql.getEntity('orders', 'id=' + req.params.index).then(orders => {
+        res.render( "form", {index: req.params.index, order: orders[0]});
+    }).catch(error => { 
+        res.redirect('/');
+    });
+});
+
 app.get('/download/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
     mysql.getEntity('tshirts', 'id=' + req.params.index).then(tshirts => {
         var name = __dirname + '/public/tshirts/tshirt' + tshirts[0].id + '.png'
@@ -561,7 +569,7 @@ app.post('/isneedupdate', urlencodedParser, function (req, res) {
 });
 
 app.post('/addmail', urlencodedParser, function (req, res) {
-    var id = req.body.id;
+    var id = req.body.label;
     mysql.getEntity('orders', 'id=' + id).then(orders => {
         mysql.getEntity('ordertshirts', 'orderID=' + id).then(orderTshirts => {
             mysql.getByQuery(SELECT_ORDER_USER + id).then(orderUser => {

@@ -123,8 +123,8 @@ var onOrderAdded = function (orderTshirt) {
 
 var addMailMessage = function (id) {
     return function (data) {
-        window.location.replace('/'); 
-        addAjaxQuery('/addmail', {id: id}, 'post', updateSettingSuccess, function(){});
+        window.location.replace('/addForm/' + id); 
+        // addAjaxQuery('/addForm/' + id, {id: id}, 'post', updateSettingSuccess, function(){});
     }
 }
 var onChangeDelivery = function (event) {
