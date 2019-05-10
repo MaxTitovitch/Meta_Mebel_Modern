@@ -116,6 +116,22 @@ app.get('/pickup', urlencodedParser, function (req, res) {
     res.render('pickup', {user: app.locals.user, myLocalize: myLocalize});
 });
 
+
+var componentToHex = function (c) {
+    var hex = Number(c).toString(16); 
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+var rgb2hex = function(string) {
+    var arr = string.substr(4, string.length-5).split(',');
+    // console.log(arr)
+    var r = arr[0].toString(16);
+    var g = arr[1].toString(16);
+    var b = arr[2].toString(16);
+    var hex = "#" + componentToHex(r) +componentToHex(g) + componentToHex(b);
+    return hex.replaceAll(' ', '');
+}
+
 //Аутентификация
 
 var authFun = function (req, res, next) {
@@ -276,7 +292,6 @@ app.get('/tshirt/:index', urlencodedParser, function (req, res) {
                     res.redirect('/');
                 });
             }).catch(error => { 
-                console.log(error);
                 res.redirect('/');
             });
         }).catch(error => { 
@@ -313,9 +328,16 @@ app.get('/edit_tshirt/:index', urlencodedParser, authFun, verifyFun, function (r
         mysql.getByQuery(SELECT_BEST_TAGS).then(tags =>  { 
             mysql.getEntity('tshirts', 'id=' + req.params.index).then(tshirts =>  {
                 if(req.params.index == 0) {
-                    res.render('edittshirt', {user: app.locals.user, tshirt:  null, tags: tags, thisTags: thisTags, myLocalize: myLocalize});
+                        mysql.getEntity('tshirts', 'id=' + (req.query.from == null ? 0 : req.query.from)).then(tshirtFrom =>  {
+                            var fromHtml = ""
+                            if(tshirtFrom.length > 0) fromHtml = tshirtFrom[0].html;
+                            res.render('edittshirt', {user: app.locals.user, tshirt:  null, tags: tags, thisTags: thisTags, myLocalize: myLocalize, color: rgb2hex('rgb(0, 255, 0)'), fromHtml: fromHtml });
+
+                        }).catch(error => { 
+                            res.redirect('/');
+                        });
                 } else if(tshirts.length > 0) {
-                    res.render('edittshirt', {user: app.locals.user, tshirt:  tshirts[0], tags: tags, thisTags: thisTags, myLocalize: myLocalize});
+                    res.render('edittshirt', {user: app.locals.user, tshirt:  tshirts[0], tags: tags, thisTags: thisTags, myLocalize: myLocalize, color: rgb2hex(tshirts[0].color) });
                 } else {
                     res.redirect('/');
                 }
@@ -464,7 +486,6 @@ app.get('/addForm/:index', urlencodedParser, function (req, res) {
             for (var i = 0; i < tshirts.length; i++) {
                 price += tshirts[i].id;
             }
-            console.log(price)
             res.render( "form", {index: req.params.index, order: orders[0], price: price});
         }).catch(error => { 
             res.redirect('/');
@@ -538,11 +559,9 @@ app.post('/addorder', urlencodedParser, function (req, res) {
         mysql.getEntity('orders', '', 'id DESC').then(orders => {
             res.send(orders[0]);
         }).catch(error => {
-        console.log("2")
             res.send('ERROR');
         });
     }).catch(error => {
-        console.log(error)
         res.send('ERROR');
     });
 });
@@ -553,7 +572,6 @@ app.post('/addordertshirt', urlencodedParser, function (req, res) {
     mysql.insertEntity('ordertshirts', orderTshirt).then(result => {
         res.send('OK');
     }).catch(error => {
-        console.log("1");
         res.send('ERROR');
     });
 });
@@ -609,18 +627,16 @@ app.post('/addtshirt', urlencodedParser, function (req, res) {
     var tag = tshirt.tags;
     delete tshirt.tags;
     if(tshirt.id == 0 ) {
+        delete tshirt.id;
         mysql.insertEntity('tshirts', tshirt).then(result => {
             mysql.getEntity('tshirts', '',  'id DESC').then(tshirts => {
-                // mysql.getEntity('tags', 'tshirtID=' + tshirts[0].id).then(tags => {
+                console.log(tshirts[0])
                     addTags(tag, tshirts[0].id);
-                    res.send(tshirts[0].id);
+                    res.send(tshirts[0].id.toString());
                 }).catch(error => {
                     res.send('ERROR');
                 });
-            // }).catch(error => {
-            //     res.send('ERROR');
-            // });
-        }).catch(error => {    
+        }).catch(error => {   
             res.send('ERROR');
         });
     } else {

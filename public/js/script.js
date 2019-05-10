@@ -1,6 +1,10 @@
 
 
 jQuery(function($) {
+    if($('#clippedDiv').text().trim() != ""){
+        $('.img-container').html($('#clippedDiv').text());
+        $('#clippedDiv p, #clippedDiv img').draggable();
+    }
     $('#save-pass').click(onSaveSettings);
     $('.remove-user').click(onRemoveUser);
     $('.update-user').click(onUpdateUser);
@@ -262,7 +266,7 @@ var onSearch = function (event) {
 }
 
  var onChangeColor = function (event) {
-    $("#clippedDiv").attr('style', 'background-color: ' + $(this).val() + ';');
+    $("#clippedDiv").attr('style', 'background-color: ' + $(this).val() + ';  position: relative;');
     $("#miniPolygon").attr('style', 'background-color: ' + $(this).val() + ';');
  }
 
@@ -276,6 +280,7 @@ var onAddTextImg = function (event) {
     });
     $('#clippedDiv').append(text);
     $(text).draggable();
+    $(text).css({"top": "0px", "position": "absolute"});
     $('#addTextModal').modal('hide');
 }
 
@@ -293,10 +298,11 @@ var onDragEnter = function (event) {
 var checkFile = function (data) {
     var img = $('<img>', {"src": data});
     img.css({
-        'width': "300px",
+        'width': "300px"
     });
     $('#clippedDiv').append(img);
     $(img).draggable();
+    $(img).css({"top": "0px", "position": "absolute"});
 }
 
 
