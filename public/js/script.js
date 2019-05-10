@@ -11,6 +11,9 @@ jQuery(function($) {
     $('.create-user').click(onCreateUser);
     $('#add-save-user').click(onSaveOrAddUser);
     $('#pay-tshirt').click(onPayTshirt);
+    $('#pay-tshirt-basket').click(onPayTshirtBasket);
+    $('#close-tshirt-basket').click(onCloseTshirtBasket);
+    $('#add-in-basket').click(onAddInBasket);
     $('#delivery-type div input').click(onChangeDelivery);
     $('#delete-this-tshirt').click(onRemoveTshirt);
     $('#user_ranking input').click(onSaveRanking);
@@ -124,6 +127,41 @@ var onPayTshirt = function (event) {
     addAjaxQuery('/addorder', order, 'post', onOrderAdded(orderTshirt), function(){})  
 }
 
+var onPayTshirtBasket = function (event) {
+    var orderID = $("#order-index").val();
+    window.location.replace('/addForm/' + orderID);
+}
+
+var onCloseTshirtBasket = function (event) {
+    addAjaxQuery('/closeorder', {'orderID': ""}, 'post', function(){}, function(){});
+    window.location.replace('/');
+}
+
+var onOrderAddedBasket = function (orderTshirt) {
+    return function (data) {
+        orderTshirt.orderID = data.id;
+        addAjaxQuery('/addordertshirt', orderTshirt, 'post', addMailMessage(orderTshirt.orderID), function(){});
+    }
+}
+
+var onAddInBasket = function (event) {
+
+    if($("#user-address").val() == '' || $("#user-phone").val() == '') return;
+    var order = {
+        userID: $("#user-index").val(),
+        address: $("#user-address").val(),
+        phone: $("#user-phone").val()
+    }
+    var orderTshirt = {
+        tshirtID: location.pathname.split('/')[2],
+        orderID: null, 
+        gender: $("#payed-gender div input:checked").val(), 
+        size: $("#payed-size div input:checked").val(), 
+        color: $("#payed-color").val()
+    }
+    addAjaxQuery('/addinbacket', order, 'post', onOrderAddedBasket(orderTshirt), function(){})  
+}
+
 var onOrderAdded = function (orderTshirt) {
     return function (data) {
         orderTshirt.orderID = data.id;
@@ -134,9 +172,9 @@ var onOrderAdded = function (orderTshirt) {
 var addMailMessage = function (id) {
     return function (data) {
         window.location.replace('/addForm/' + id); 
-        // addAjaxQuery('/addForm/' + id, {id: id}, 'post', updateSettingSuccess, function(){});
     }
 }
+
 var onChangeDelivery = function (event) {
     var addressInput = $('#user-address');
     if($(this).val() == 'deliv') {
@@ -160,6 +198,18 @@ var onRemoveTshirt = function (event) {
         window.location.replace('/'); 
     }, function(){});
 }
+
+var onOrderAddedBasket = function (orderTshirt) {
+    return function (data) {
+
+        orderTshirt.orderID = data.id;
+        addAjaxQuery('/addordertshirt', orderTshirt, 'post', function () {
+
+            $("#exampleModal").modal('hide');
+        }, function(){});
+    }
+}
+
 
 var onSaveRanking = function (event) {
     if($("#user-index").val() != 0) {

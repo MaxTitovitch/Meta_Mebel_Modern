@@ -39,7 +39,8 @@
               </div>
             <% } else { %>
               <div class="auth-space">
-                  <a href="/users/<%= user.id %>"><%= user.fullName %></a> | <a href="/logout"><%= myLocalize.translate("Выйти")%></a>
+                  <a href="/users/<%= user.id %>"><%= user.fullName %></a> | <a href="/logout"><%= myLocalize.translate("Выйти")%></a><br />
+                  <a href="/basket">КОРЗИНА</a>
               </div>
             <% } %>
         </nav>

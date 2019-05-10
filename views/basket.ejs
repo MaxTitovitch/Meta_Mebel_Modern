@@ -1,0 +1,29 @@
+<%- include('header'); -%>
+<main>
+
+    <h2><%= myLocalize.translate("Адрес")%> : <strong id="user-address"><%= order.address %></strong></h2>
+    <h2><%= myLocalize.translate("Телефон")%> : <strong id="user-phone"><%= order.phone %></strong></h2>
+    <h2><%= myLocalize.translate("Цена")%> : <%= price %></h2>
+    <input id="order-index" type="hidden" value="<%= order.id %>">
+    <div class="main main-new">
+        <% ordertshirts.forEach(function(ordertshirt){ %>
+            <a href="ordertshirts/<%= ordertshirt.id %>">
+                <div class="t-shirt-one">                    
+                    <img src="http://127.0.0.1:3000/download/<%= ordertshirt.id%>" width="300px" height="200px">
+                    <div>
+                        <%= ordertshirt.name %>  
+                         <p style="color: <%= ordertshirt.color %>;">COLOR</p>
+                        <p>Пол: <%= ordertshirt.gender %></p>
+                        <p>Размер: <%= ordertshirt.size %></p>
+                    </div>
+                </div>
+            </a>
+        <% }); %>
+    </div>
+
+    <button id="pay-tshirt-basket" type="button" class="btn btn-primary form-control"><%= myLocalize.translate("Купить")%></button><br /><br />
+    <!-- <button id="close-tshirt-basket" type="button" class="btn btn-primary form-control"><%= myLocalize.translate("Отмена")%></button> -->
+
+</main> 
+
+<%- include('footer'); -%>

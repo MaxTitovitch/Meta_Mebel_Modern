@@ -8,6 +8,8 @@ const SELECT_COMMENTS_P2 = ' GROUP BY comments.id ORDER BY comments.id DESC';
 const SELECT_TSHIRTS_OF_ORDER = 'select tshirts.* from tshirts join ordertshirts on tshirts.id = ordertshirts.tshirtID where ordertshirts.orderID=';
 const SELECT_BEST_TAGS = 'SELECT tagName FROM tshirttags GROUP BY tagName ORDER BY COUNT(*) DESC'
 const SELECT_ORDER_USER = 'SELECT users.email FROM users JOIN orders ON users.id = orders.userID WHERE orders.id='
+const SELECT_ORDER_TSHIRTS= 'select * from ordertshirts join tshirts on ordertshirts.tshirtID = tshirts.id where ordertshirts.orderID='
+const SELECT_ORDER_PRICE= 'select sum(tshirts.price) as pricecount from tshirts join ordertshirts on tshirts.id=ordertshirts.tshirtID join orders on orders.id=ordertshirts.orderID where orders.id='
 const FULL_TEXT_QUERY = "SELECT tshirts.* FROM tshirts LEFT JOIN comments ON tshirts.id = comments.tshirtID LEFT JOIN `tshirttags` ON `tshirts`.id = `tshirttags`.tshirtID WHERE (MATCH (`comments`.`text`) AGAINST ('TO_REPLACE')) OR (MATCH (`tshirts`.`name`, `tshirts`.`shortText`) AGAINST ('TO_REPLACE')) OR (MATCH (`tshirttags`.`tagName`) AGAINST ('TO_REPLACE')) GROUP BY tshirts.id"
 
 
@@ -197,6 +199,26 @@ app.get('/search', urlencodedParser, function (req, res) {
         var query = FULL_TEXT_QUERY.split('TO_REPLACE').join(req.query.value);
         mysql.getByQuery(query).then(tshirts => {
             res.render('search', {user: app.locals.user, query: req.query.value, tshirts: tshirts, myLocalize: myLocalize});
+        }).catch(error => {   
+            res.redirect('/');
+        });
+    } else{
+        res.redirect('/');
+    }
+});
+
+app.get('/basket', urlencodedParser, function (req, res) {
+    if(req.session.order != null) {
+        mysql.getEntity('orders', 'id=' + req.session.order).then(orders => {
+            mysql.getByQuery(SELECT_ORDER_TSHIRTS + req.session.order).then(ordertshirts => {
+                mysql.getByQuery(SELECT_ORDER_PRICE + req.session.order).then(price => {
+                    res.render('basket', {user: app.locals.user, ordertshirts: ordertshirts, order: orders[0], price: price[0].pricecount, myLocalize: myLocalize});
+                }).catch(error => {   
+                    res.redirect('/');
+                });
+            }).catch(error => {   
+                res.redirect('/');
+            });
         }).catch(error => {   
             res.redirect('/');
         });
@@ -566,6 +588,31 @@ app.post('/addorder', urlencodedParser, function (req, res) {
     });
 });
 
+app.post('/addinbacket', urlencodedParser, function (req, res) {
+    // console.log(req.session.order)
+    var order = req.body;
+    order.userID = order.userID * 1;
+    if(req.session.order == null) {
+        mysql.insertEntity('orders', order).then(result => {
+            mysql.getEntity('orders', '', 'id DESC').then(orders => {
+                req.session.order = orders[0].id;
+                res.send(orders[0]);
+            }).catch(error => {
+                res.send('ERROR');
+            });
+        }).catch(error => {
+            res.send('ERROR');
+        });
+    } else {
+        mysql.getEntity('orders', 'id=' + req.session.order).then(orders => {
+            res.send(orders[0]);
+        }).catch(error => {
+            console.log(error)
+            res.send('ERROR');
+        });
+    }
+});
+
 
 app.post('/addordertshirt', urlencodedParser, function (req, res) {
     var orderTshirt = req.body;
@@ -607,6 +654,7 @@ app.post('/savesetting', urlencodedParser, function (req, res) {
     mysql.getEntity('orders', 'id=' + id).then(orders => {
         mysql.getEntity('ordertshirts', 'orderID=' + id).then(orderTshirts => {
             mysql.getByQuery(SELECT_ORDER_USER + id).then(orderUser => {
+                req.session.order = null;
                 doMail(orderUser.email + ", " + "maxtitovitch@mail.ru", createMessage(orders[0], orderTshirts));
                 res.send('OK');
             }).catch(error => {
@@ -618,6 +666,12 @@ app.post('/savesetting', urlencodedParser, function (req, res) {
     }).catch(error => {
         res.send('ERROR');
     });
+});
+
+app.post('/closeorder', urlencodedParser, function (req, res) {
+    // console.log(req.session.order);
+    req.session.order = null;
+    res.send('OK');
 });
 
 app.post('/addtshirt', urlencodedParser, function (req, res) {

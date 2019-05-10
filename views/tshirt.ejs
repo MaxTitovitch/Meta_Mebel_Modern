@@ -216,7 +216,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= myLocalize.translate("Отмена")%></button>
-          <button id="add-in-basket" type="button" class="btn btn-primary"><%= myLocalize.translate("В корзину")%></button>
+          <% if (user != null) { -%>
+            <button id="add-in-basket" type="button" class="btn btn-primary"><%= myLocalize.translate("В корзину")%></button>
+          <% } -%>
           <button id="pay-tshirt" type="button" class="btn btn-primary"><%= myLocalize.translate("Купить")%></button>
         </div>
       </div>
