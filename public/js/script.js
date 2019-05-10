@@ -11,6 +11,7 @@ jQuery(function($) {
     $('#delete-this-tshirt').click(onRemoveTshirt);
     $('#user_ranking input').click(onSaveRanking);
     $('#new-tag').keyup(onAddTag);
+    $('.main-tags .badge').focus(onDeleteTag);
     $('#add-comment').click(onAddComment);
     $('.comment-like').click(onAddLike);
     $('#search').click(onSearch);
@@ -173,8 +174,22 @@ var onSaveRanking = function (event) {
 
 var onAddTag = function (event) {
     if(event.which == 13) {
+        var tags = $(".badge ");
+        for (var i = 0; i < tags.length; i++) {
+            if($(tags[i]).text().toUpperCase() == $(this).val().toUpperCase()){
+                $(this).val('');
+                return;
+            }
+        }
         $(this).before($('<a>', {href: 'href="/search?value=' + $(this).val(), class: "badge badge-pill badge-dark"}).append($(this).val()));
         $(this).val('');
+    }
+}
+
+var onDeleteTag = function (event) {
+    // alert("D")
+    if(location.pathname.split('/')[1] == "edit_tshirt") {
+        $(this).remove();
     }
 }
 

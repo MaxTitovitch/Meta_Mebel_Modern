@@ -611,11 +611,15 @@ app.post('/addtshirt', urlencodedParser, function (req, res) {
     if(tshirt.id == 0 ) {
         mysql.insertEntity('tshirts', tshirt).then(result => {
             mysql.getEntity('tshirts', '',  'id DESC').then(tshirts => {
-                addTags(tag, tshirts[0].id);
-                res.send(tshirts[0].id);
-            }).catch(error => {
-                res.send('ERROR');
-            });
+                // mysql.getEntity('tags', 'tshirtID=' + tshirts[0].id).then(tags => {
+                    addTags(tag, tshirts[0].id);
+                    res.send(tshirts[0].id);
+                }).catch(error => {
+                    res.send('ERROR');
+                });
+            // }).catch(error => {
+            //     res.send('ERROR');
+            // });
         }).catch(error => {    
             res.send('ERROR');
         });
@@ -639,11 +643,10 @@ var addTags = function (tags, tshirtID){
         tshirtID: tshirtID,  
         tagName: "",  
     };
+    mysql.deleteEntity('tshirttags', "1").then(result => {}).catch(error => { });
     for (var i = 0; i < tagsArray.length; i++) {
         tag.tagName = tagsArray[i];
-        mysql.insertEntity('tshirttags', tag).then(result => {}).catch(error => {
-
-        })
+        mysql.insertEntity('tshirttags', tag).then(result => {}).catch(error => {});
     }
 
 }

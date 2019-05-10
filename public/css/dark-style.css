@@ -3,6 +3,10 @@ body {
 	color: #cfd1cd;
 }
 
+.auth-space {
+    margin-right: 20px;
+}
+
 .modal-body, .modal-footer {
     background-color: #151719;
 }
@@ -267,19 +271,31 @@ main {
 #download-this-tshirt {
     background-color: #007bff !important;
 }
+/*
+.frame
+{
+   /* width: 1280px;
+    height: 786px;
+    border: 0;
 
+    -ms-transform: scale(0.25);
+    -moz-transform: scale(0.25);
+    -o-transform: scale(0.25);
+    -webkit-transform: scale(0.25);
+    transform: scale(0.25);
 
+/*    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;*/
+}*/
 
+.tshirt-big-img {
+    border: 1px solid black;
+    border-radius: 10px;
 
-
-
-
-
-
-
-
-
-
+}
 
 
 
