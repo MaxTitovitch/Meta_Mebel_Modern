@@ -45,9 +45,14 @@ var onSaveSettings = function (event) {
         date: $("#date").val(),
         password: $("#password").val(),
     }
-    addAjaxQuery('/savesetting', user, 'post', updateSettingSuccess, function(){})
+    addAjaxQuery('/savesetting', user, 'post', updateUserSetting, function(){})
 }
-
+var updateUserSetting = function () {
+    // alert("Обновление...");
+    var timerId = setTimeout(function() {
+        window.location.replace('/'); 
+    }, 1000);
+}
 var updateSettingSuccess = function () {
     window.location.reload();
 }
@@ -152,13 +157,17 @@ var onRemoveTshirt = function (event) {
 }
 
 var onSaveRanking = function (event) {
-    var value = $(this).val()
-    var ranking = {
-        value: value,
-        userID: $("#user-index").val(),
-        tshirtID: location.pathname.split('/')[2],
+    if($("#user-index").val() != 0) {
+        var value = $(this).val()
+        var ranking = {
+            value: value,
+            userID: $("#user-index").val(),
+            tshirtID: location.pathname.split('/')[2],
+        }
+        addAjaxQuery('/saveranking', ranking, 'post', updateSettingSuccess, function(){});
+    } else {
+                event.preventDefault();
     }
-    addAjaxQuery('/saveranking', ranking, 'post', updateSettingSuccess, function(){});
 }
 
 
@@ -184,10 +193,12 @@ var onAddComment = function (event) {
 
 var addPulsComment = function () {
     if(location.pathname.split('/')[1] == "tshirt") {
-        var currentSize = $("#count-comment").val();
-        var timerId = setInterval(function() {
-            addAjaxQuery('/isneedupdate', {id: location.pathname.split('/')[2]}, 'post', isUpdateWindow(currentSize), function(){});
-        }, 5000);
+        if($("#user-index").val() != 0) {
+            var currentSize = $("#count-comment").val();
+            var timerId = setInterval(function() {
+                addAjaxQuery('/isneedupdate', {id: location.pathname.split('/')[2]}, 'post', isUpdateWindow(currentSize), function(){});
+            }, 5000);
+        }
     }
 }
 
@@ -201,14 +212,16 @@ var isUpdateWindow = function (currentSize) {
 
 
 var onAddLike = function () {
-    var like = {
-        userID: $("#user-index").val(),
-        commentID: $(this).parent().parent().attr('id').split('-')[1]
-    }
-    if($(this).attr('class').split(' ')[1] == 'liked'){
-        addAjaxQuery('/removelike', like, 'post', updateSettingSuccess, function(){}); 
-    } else {
-        addAjaxQuery('/addlike', like, 'post', updateSettingSuccess, function(){}); 
+    if($("#user-index").val() != 0) {
+        var like = {
+            userID: $("#user-index").val(),
+            commentID: $(this).parent().parent().attr('id').split('-')[1]
+        }
+        if($(this).attr('class').split(' ')[1] == 'liked'){
+            addAjaxQuery('/removelike', like, 'post', updateSettingSuccess, function(){}); 
+        } else {
+            addAjaxQuery('/addlike', like, 'post', updateSettingSuccess, function(){}); 
+        }
     }
 }
 

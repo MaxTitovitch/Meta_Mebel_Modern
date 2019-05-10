@@ -1,8 +1,8 @@
 <%- include('header'); -%>
 <main>
 	<% if(!isRegistry){ %>
-
 		<form class="auth-form" method="post" action="/auth">
+		  <p class="text-danger"><%=authMessage%></p>
 		  <div class="form-group">
 		    <label for="email"><%= myLocalize.translate("Почта")%>:</label>
 		    <input name="email" type="email" class="form-control" placeholder="<%= myLocalize.translate("Почта")%>" required="true">

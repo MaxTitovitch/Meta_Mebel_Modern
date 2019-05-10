@@ -63,26 +63,36 @@
       <label for="rating_1" class="label_rating"></label>
     </div>
     <div class="buttons-tshirt">
-      <a id="copy-tshirt" class="btn btn-primary" href="/edit_tshirt/0?from=<%= tshirt.id %>"><%= myLocalize.translate("Копировать")%></a>
-      <% if (user.role == 1 || user.id == tshirt.userID) { -%>
-        <a id="update-this-tshirt" class="btn btn-primary" href="/edit_tshirt/<%= tshirt.id %>/<%= user.id == tshirt.userID ? '' : '?for=admin' %>"><%= myLocalize.translate("Редактировать")%></a>
-        <button id="delete-this-tshirt" class="btn btn-primary" type="submit"><%= myLocalize.translate("Удалить")%></button>
-        <a id="download-this-tshirt" class="btn btn-primary" type="submit" href="/download/<%= tshirt.id %>"><%= myLocalize.translate("Скачать")%></a>
+
+      <% if(user != null) { %>
+        <a id="copy-tshirt" class="btn btn-primary" href="/edit_tshirt/0?from=<%= tshirt.id %>"><%= myLocalize.translate("Копировать")%></a>
+      <% } %>
+
+      <% if (user != null) { -%>
+        <% if (user.role == 1 || user.id == tshirt.userID) { -%>
+          <a id="update-this-tshirt" class="btn btn-primary" href="/edit_tshirt/<%= tshirt.id %>/<%= user.id == tshirt.userID ? '' : '?for=admin' %>"><%= myLocalize.translate("Редактировать")%></a>
+          <button id="delete-this-tshirt" class="btn btn-primary" type="submit"><%= myLocalize.translate("Удалить")%></button>
+          <a id="download-this-tshirt" class="btn btn-primary" type="submit" href="/download/<%= tshirt.id %>"><%= myLocalize.translate("Скачать")%></a>
+        <% } -%>
       <% } -%>
     </div>
     
     <br />
     <h2><%= myLocalize.translate("Коментарии")%>: </h2>
-    <div class="comment-zone">
-      <div class="comment">
-        <div class="likes">
-          <div class="form-group">
-          <input id="new-comment" type="text" class="form-control" placeholder="<%= myLocalize.translate("Коментарий")%>" required="true" />
-          <input id="count-comment" type="hidden" value="<%= sizeComment%>" /> 
+
+      <div class="comment-zone">
+
+        <% if(user != null) { %>
+          <div class="comment">
+            <div class="likes">
+              <div class="form-group">
+              <input id="new-comment" type="text" class="form-control" placeholder="<%= myLocalize.translate("Коментарий")%>" required="true" />
+              <input id="count-comment" type="hidden" value="<%= sizeComment%>" /> 
+              </div>
+              <button id="add-comment" class="form-control btn btn-primary" type="submit"><%= myLocalize.translate("Добавить")%></button>
+            </div>
           </div>
-          <button id="add-comment" class="form-control btn btn-primary" type="submit"><%= myLocalize.translate("Добавить")%></button>
-        </div>
-      </div>
+        <% } %>
 
       <% for (var i = 0; i < comments.length; i++) { -%>
         <div id="comment-<%= comments[i].id %>" class="comment">
@@ -142,8 +152,12 @@
           <label for="user-phone"><%= myLocalize.translate("Телефон")%>:</label>
           <input name="user-phone" id="user-phone" type="text" class="form-control" placeholder="<%= myLocalize.translate("Телефон")%>" required="true">
         </div>
-
-        <input id="user-index" type="hidden" required="true" value="<%= user.id%>">
+        
+        <% if(user != null) { %>
+          <input id="user-index" type="hidden" required="true" value="<%= user.id%>">
+        <% }else { %>
+          <input id="user-index" type="hidden" required="true" value="0">
+        <% } %>
 
         <fieldset class="form-group">
           <div class="row">

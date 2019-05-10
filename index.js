@@ -5,6 +5,7 @@ const SELECT_USERMEDALS = 'SELECT * FROM medals JOIN usermedals ON medals.id=use
 const SELECT_USER_AND_TSHIRT = 'SELECT tshirts.*, users.fullName FROM tshirts JOIN users ON tshirts.userID=users.id WHERE tshirts.id=';
 const SELECT_COMMENTS_P1 = 'SELECT comments.*, users.fullName, COUNT(likes.id) as quantity FROM comments LEFT JOIN likes ON comments.id=likes.commentID JOIN users ON users.id=comments.userID WHERE comments.tshirtID=';
 const SELECT_COMMENTS_P2 = ' GROUP BY comments.id ORDER BY comments.id DESC';
+const SELECT_TSHIRTS_OF_ORDER = 'select tshirts.* from tshirts join ordertshirts on tshirts.id = ordertshirts.tshirtID where ordertshirts.orderID=';
 const SELECT_BEST_TAGS = 'SELECT tagName FROM tshirttags GROUP BY tagName ORDER BY COUNT(*) DESC'
 const SELECT_ORDER_USER = 'SELECT users.email FROM users JOIN orders ON users.id = orders.userID WHERE orders.id='
 const FULL_TEXT_QUERY = "SELECT tshirts.* FROM tshirts LEFT JOIN comments ON tshirts.id = comments.tshirtID LEFT JOIN `tshirttags` ON `tshirts`.id = `tshirttags`.tshirtID WHERE (MATCH (`comments`.`text`) AGAINST ('TO_REPLACE')) OR (MATCH (`tshirts`.`name`, `tshirts`.`shortText`) AGAINST ('TO_REPLACE')) OR (MATCH (`tshirttags`.`tagName`) AGAINST ('TO_REPLACE')) GROUP BY tshirts.id"
@@ -141,12 +142,14 @@ var verifyFun = function (req, res, next) {
     });
 }
 
+var authMessage = '';
 var doAuth = function (req, res, path) {
     passport.authenticate('local', function(err, user, info) {
         if (err) {
             res.render('error', {error: err, title: SYSTEM_ERROR_HEAD, myLocalize: myLocalize});
         }
         if (!user) {
+            authMessage = "Некорректный логин\\пароль!";
             return res.redirect('/auth'); 
         }
         req.logIn(user, function(err) {
@@ -168,14 +171,15 @@ var doMail = function (mailTo, message) {
 }
 
 app.get('/auth', urlencodedParser, authFun, function (req, res) {
-    res.render('auth', {isRegistry: req.query.reg, user: app.locals.user, myLocalize: myLocalize});
+    var message = authMessage;
+    authMessage = "";
+    res.render('auth', {isRegistry: req.query.reg, user: app.locals.user, myLocalize: myLocalize, authMessage: message});
 });
 
 app.get('/search', urlencodedParser, function (req, res) {
     if(req.query.value != undefined && req.query.value != '') {
         var query = FULL_TEXT_QUERY.split('TO_REPLACE').join(req.query.value);
         mysql.getByQuery(query).then(tshirts => {
-            console.log(tshirts)
             res.render('search', {user: app.locals.user, query: req.query.value, tshirts: tshirts, myLocalize: myLocalize});
         }).catch(error => {   
             res.redirect('/');
@@ -187,7 +191,7 @@ app.get('/search', urlencodedParser, function (req, res) {
 
 app.post('/auth', urlencodedParser, function (req, res) {
     var path = req.session.passport == undefined ? '/' : '/users/' + req.session.passport.user; 
-    return doAuth(req, res, path) 
+    return doAuth(req, res, path);
 });
 
 var createUser = function (body, token) {
@@ -249,12 +253,12 @@ app.get('/users/:index', urlencodedParser, authFun, verifyFun, function (req, re
     });
 });
 
-app.get('/tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
+app.get('/tshirt/:index', urlencodedParser, function (req, res) {  
         mysql.getByQuery(SELECT_USER_AND_TSHIRT + req.params.index).then(tshirts => {
             mysql.getByQuery(SELECT_USERMEDALS + tshirts[0].userID).then(medals => {
-                mysql.getEntity('rankings', 'userID=' + app.locals.user.id + ' AND tshirtID=' + tshirts[0].id).then(rankings => {
+                mysql.getEntity('rankings', 'userID=' + (app.locals.user == null ? 0 : app.locals.user.id) + ' AND tshirtID=' + tshirts[0].id).then(rankings => {
                     mysql.getByQuery(SELECT_COMMENTS_P1 + tshirts[0].id + SELECT_COMMENTS_P2).then(comments => {
-                        mysql.getEntity('likes', 'userID=' + app.locals.user.id).then(likes => {
+                        mysql.getEntity('likes', 'userID=' + (app.locals.user == null ? 0 : app.locals.user.id)).then(likes => {
                             mysql.getEntity('tshirttags', 'tshirtID=' + tshirts[0].id).then(tags => {
                                 var sizeComment = comments.length;
                                 comments = getNeededComments(req.query, comments);
@@ -272,6 +276,7 @@ app.get('/tshirt/:index', urlencodedParser, authFun, verifyFun, function (req, r
                     res.redirect('/');
                 });
             }).catch(error => { 
+                console.log(error);
                 res.redirect('/');
             });
         }).catch(error => { 
@@ -381,16 +386,15 @@ app.post('/savesetting', urlencodedParser, function (req, res) {
 });
 
 app.post('/saveimg', urlencodedParser, upload.single('myfile'),  function (req, res) {
-
     var target_path =  '/public/uploads/' + createToken() + req.file.originalname;
     fs.writeFileSync(__dirname + target_path, req.file.buffer)
-    // console.log(req.file.buffer);
     res.send(target_path);
 });
 
 var saveUser = function (user, savetype) {
     if(user.id == 0) return addUser(user);
     mysql.getEntity('users', 'id=' + user.id).then(users => {
+        // myLocalize.setLocale(users[0].language);
         var entityUser = savetype == 1 ? updateUser (users[0], user) : updateUserByAdmin (users[0], user);
         mysql.updateEntity('users', entityUser.id, entityUser).then(result => {
             return 'OK';
@@ -455,13 +459,22 @@ app.post('/saveuser', urlencodedParser, function (req, res) {
 
 app.get('/addForm/:index', urlencodedParser, function (req, res) {
     mysql.getEntity('orders', 'id=' + req.params.index).then(orders => {
-        res.render( "form", {index: req.params.index, order: orders[0]});
+        mysql.getByQuery(SELECT_TSHIRTS_OF_ORDER + req.params.index).then(tshirts => {
+            var price = 0;
+            for (var i = 0; i < tshirts.length; i++) {
+                price += tshirts[i].id;
+            }
+            console.log(price)
+            res.render( "form", {index: req.params.index, order: orders[0], price: price});
+        }).catch(error => { 
+            res.redirect('/');
+        });
     }).catch(error => { 
         res.redirect('/');
     });
 });
 
-app.get('/download/:index', urlencodedParser, authFun, verifyFun, function (req, res) {  
+app.get('/download/:index', urlencodedParser, function (req, res) {  
     mysql.getEntity('tshirts', 'id=' + req.params.index).then(tshirts => {
         var name = __dirname + '/public/tshirts/tshirt' + tshirts[0].id + '.png'
         phantom.create().then(function(ph) {
@@ -525,9 +538,11 @@ app.post('/addorder', urlencodedParser, function (req, res) {
         mysql.getEntity('orders', '', 'id DESC').then(orders => {
             res.send(orders[0]);
         }).catch(error => {
+        console.log("2")
             res.send('ERROR');
         });
     }).catch(error => {
+        console.log(error)
         res.send('ERROR');
     });
 });
@@ -538,6 +553,7 @@ app.post('/addordertshirt', urlencodedParser, function (req, res) {
     mysql.insertEntity('ordertshirts', orderTshirt).then(result => {
         res.send('OK');
     }).catch(error => {
+        console.log("1");
         res.send('ERROR');
     });
 });
@@ -568,7 +584,7 @@ app.post('/isneedupdate', urlencodedParser, function (req, res) {
     });
 });
 
-app.post('/addmail', urlencodedParser, function (req, res) {
+app.post('/savesetting', urlencodedParser, function (req, res) {
     var id = req.body.label;
     mysql.getEntity('orders', 'id=' + id).then(orders => {
         mysql.getEntity('ordertshirts', 'orderID=' + id).then(orderTshirts => {
@@ -609,7 +625,6 @@ app.post('/addtshirt', urlencodedParser, function (req, res) {
             addTags(tag, id);
             res.send(id);
         }).catch(error => {
-            console.log(error)
             res.send('ERROR');
         });
     }
