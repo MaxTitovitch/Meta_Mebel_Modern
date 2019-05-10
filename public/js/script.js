@@ -133,7 +133,9 @@ var onPayTshirtBasket = function (event) {
 }
 
 var onCloseTshirtBasket = function (event) {
-    addAjaxQuery('/closeorder', {'orderID': ""}, 'post', function(){}, function(){});
+    var obj = {'orderID': "1"};
+    addAjaxQuery('/closeorder', obj, 'post', function(){}, function(){});
+    addAjaxQuery('/closeorder', obj, 'post', function(){}, function(){});
     window.location.replace('/');
 }
 
